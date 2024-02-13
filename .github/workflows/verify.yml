@@ -1,0 +1,29 @@
+name: Puppet Verification
+
+on: [push]
+
+jobs:
+  puppet-lint:
+
+    runs-on:
+      group: "gasp-k8s"
+      labels: "test"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: puppet-lint
+        uses: scottbrenner/puppet-lint-action@master
+        with:
+          args: ./
+
+      - name: Validate
+        uses: mysociety/action-pdk@master
+        with:
+          action: 'validate'
+
+      - name: Run Unit Tests
+        uses: mysociety/action-pdk@master
+        with:
+          action: 'test unit'
