@@ -2,6 +2,7 @@
 define platform::utils::manage_service (
   Enum['yes', 'present', 'installed', 'no', 'absent', 'uninstalled'] $ensure = 'running',
   Optional[Array[File]] $require_files = undef,
+  Optional[String] $binary = undef,
 ) {
   $actual_ensure = $ensure ? {
     Pattern[/^(yes|present|installed)$/ ] => 'running',
@@ -18,5 +19,6 @@ define platform::utils::manage_service (
     ensure    => $actual_ensure,
     enable    => $actual_enable,
     require   => $require_files,
+    binary    => $binary,
   }
 }

@@ -8,7 +8,9 @@ class platform(
   String $cluster,
   String $project,
   Enum['yes', 'present', 'installed', 'no', 'absent', 'uninstalled'] $ensure_netcheck = 'present',
+  String $netcheck_binary_location = '/usr/local/bin/netcheck',
   Enum['yes', 'present', 'installed', 'no', 'absent', 'uninstalled'] $ensure_puppet_exporter = 'present',
+  String $puppet_exporter_binary_location = '/usr/local/bin/puppet-agent-exporter',
   Hash $users = {},
   Hash $packages = {},
 ) {
