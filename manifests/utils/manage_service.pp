@@ -27,5 +27,4 @@ define platform::utils::manage_service (
     notify {"The ${title} service cannot be managed on docker.": }
   }
 
-
 }

@@ -7,7 +7,7 @@
 class platform::install {
 
   ######################################################################################################################
-  ## INSTALL COMMON TOOLS AND UTILITIES
+  ## INSTALL COMMON TOOLS, PACKAGES AND UTILITIES
   ######################################################################################################################
   platform::utils::manage_file { 'platform::netcheck_file':
     ensure => $::platform::ensure_netcheck,
@@ -22,4 +22,5 @@ class platform::install {
     notify       => Platform::Utils::Manage_service['puppet_agent_exporter'],
   }
 
+  include platform::packages
 }

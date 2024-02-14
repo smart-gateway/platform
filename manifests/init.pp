@@ -18,6 +18,9 @@ class platform(
   contain platform::config
   contain platform::service
 
+  # Do pre-install tasks
+  platform::utils::update_package_manager { 'platform::ensure_package_manager_is_updated': }
+
   # Order of class application
   Class['platform::install'] ->
   Class['platform::config'] ->

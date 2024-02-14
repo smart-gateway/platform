@@ -1,8 +1,55 @@
-# @summary A short summary of the purpose of this class
+# Defined Type: platform::package
 #
-# A description of what this class does
+# This defined type is a wrapper around the stdlib::ensure_packages function, allowing for
+# the declaration of package resources within the platform module with a simplified interface.
+# It ensures that the specified package is in the desired state, abstracting away the details
+# of package management.
 #
-# @example
-#   include platform::packages
+# Parameters:
+#   - ensure: Specifies the desired package state, such as 'present', 'absent', 'latest', or a specific version.
+#
+# Example Usage:
+#
+#   To ensure a package is installed:
+#     platform::package { 'nginx':
+#       ensure => 'present',
+#     }
+#
+#   To remove a package:
+#     platform::package { 'apache2':
+#       ensure => 'absent',
+#     }
+#
+#   To ensure a package is updated to the latest version:
+#     platform::package { 'curl':
+#       ensure => 'latest',
+#     }
+define platform::package ( String $ensure ) {
+  stdlib::ensure_packages([$title], { ensure => $ensure })
+}
+
+# Class: platform::packages
+#
+# This class manages multiple packages based on a hash of package names and their desired states.
+# It leverages the create_resources function to dynamically declare platform::package resources
+# from a hash, allowing for the bulk management of package resources within the platform module.
+#
+# The package data should be provided through Hiera or an external data source, associating
+# each package name with its desired state.
+#
+# Example Hiera data:
+#   platform::packages:
+#     'git':
+#       ensure: 'latest'
+#     'tree':
+#       ensure: 'present'
+#
+# Note:
+#   The platform::packages class checks if the $::platform::packages variable is defined
+#   and not undef before attempting to create resources, ensuring that package management
+#   is only attempted when package data is provided.
 class platform::packages {
+  if $::platform::packages != undef {
+    create_resources(platform::package, $::platform::packages)
+  }
 }
