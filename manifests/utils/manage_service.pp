@@ -24,7 +24,7 @@ define platform::utils::manage_service (
       binary    => $binary,
     }
   } else {
-    notify("The ${title} service cannot be managed on docker.")
+    notify {"The ${title} service cannot be managed on docker.": }
   }
 
 
