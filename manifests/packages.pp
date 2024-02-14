@@ -25,7 +25,7 @@
 #       ensure => 'latest',
 #     }
 define platform::packages::package ( String $ensure ) {
-  stdlib::ensure_packages([$title], { ensure => $ensure })
+  ensure_packages([$title], { ensure => $ensure })
 }
 
 # Class: platform::packages
