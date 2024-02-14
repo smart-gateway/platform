@@ -14,11 +14,18 @@ define platform::utils::manage_service (
     default                               => false,
   }
 
-  # Manage the service
-  service { $title:
-    ensure    => $actual_ensure,
-    enable    => $actual_enable,
-    require   => $require_files,
-    binary    => $binary,
+  $is_docker = $facts['virtual'] ? { 'docker' => true, default => false }
+  if !$is_docker {
+    # Manage the service
+    service { $title:
+      ensure    => $actual_ensure,
+      enable    => $actual_enable,
+      require   => $require_files,
+      binary    => $binary,
+    }
+  } else {
+    warning("The ${title} service cannot be managed on docker.")
   }
+
+
 }
