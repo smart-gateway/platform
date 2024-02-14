@@ -11,20 +11,20 @@
 # Example Usage:
 #
 #   To ensure a package is installed:
-#     platform::package { 'nginx':
+#     platform::packages::package { 'nginx':
 #       ensure => 'present',
 #     }
 #
 #   To remove a package:
-#     platform::package { 'apache2':
+#     platform::packages::package { 'apache2':
 #       ensure => 'absent',
 #     }
 #
 #   To ensure a package is updated to the latest version:
-#     platform::package { 'curl':
+#     platform::packages::package { 'curl':
 #       ensure => 'latest',
 #     }
-define platform::package ( String $ensure ) {
+define platform::packages::package ( String $ensure ) {
   stdlib::ensure_packages([$title], { ensure => $ensure })
 }
 
@@ -50,6 +50,6 @@ define platform::package ( String $ensure ) {
 #   is only attempted when package data is provided.
 class platform::packages {
   if $::platform::packages != undef {
-    create_resources(Platform::Package, $::platform::packages)
+    create_resources(platform::packages::package, $::platform::packages)
   }
 }
