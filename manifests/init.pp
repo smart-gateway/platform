@@ -14,14 +14,13 @@ class platform(
   Hash $users = {},
   Hash $packages = {},
 ) {
+  contain platform::prep
   contain platform::install
   contain platform::config
   contain platform::service
 
-  # Do pre-install tasks
-  platform::utils::update_package_manager { 'platform::ensure_package_manager_is_updated': }
-
   # Order of class application
+  Class['platform::prep'] ->
   Class['platform::install'] ->
   Class['platform::config'] ->
   Class['platform::service']
