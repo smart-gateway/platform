@@ -8,7 +8,7 @@ define platform::utils::manage_file (
     default                               => 'absent',
   }
 
-  file { $name:
+  file { $title:
     ensure => $actual_state,
     owner  => 'root',
     group  => 'root',

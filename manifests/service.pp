@@ -6,9 +6,10 @@
 #   include platform::service
 class platform::service {
 
+  $puppet_exporter_file = File['platform::puppet_exporter_file']
   platform::utils::manage_service { 'puppet_agent_exporter':
     ensure        => $::platform::ensure_puppet_exporter,
-    require_files => [File['platform::puppet_exporter_file']],
+    require_files => [$puppet_exporter_file],
   }
 
 }
