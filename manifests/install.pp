@@ -16,7 +16,7 @@ class platform::install {
     ensure => $::platform::ensure_puppet_exporter,
     source       => 'puppet:///modules/platform/tools/exporter/puppet-agent-exporter',
     path         => '/usr/local/bin/puppet-agent-exporter',
-    notify       => Service['platform::puppet-agent-exporter'],
+    notify       => Platform::Utils::Manage_service['puppet_agent_exporter'],
   }
 
 }
