@@ -1,5 +1,5 @@
 # Define a new type in platform/manifests/manage_service.pp
-define platform::manage_service (
+define platform::utils::manage_service (
   Enum['yes', 'present', 'installed', 'no', 'absent', 'uninstalled'] $ensure = 'running',
   Optional[Array[File]] $require_files = undef,
 ) {

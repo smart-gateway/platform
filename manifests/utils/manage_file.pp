@@ -1,4 +1,4 @@
-define platform::manage_file (
+define platform::utils::manage_file (
   Enum['yes', 'present', 'installed', 'no', 'absent', 'uninstalled'] $ensure,
   String $source,
   String $path,
