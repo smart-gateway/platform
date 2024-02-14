@@ -50,6 +50,6 @@ define platform::package ( String $ensure ) {
 #   is only attempted when package data is provided.
 class platform::packages {
   if $::platform::packages != undef {
-    create_resources(platform::package, $::platform::packages)
+    create_resources(Platform::Package, $::platform::packages)
   }
 }
