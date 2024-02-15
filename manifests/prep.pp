@@ -6,7 +6,7 @@
 #   include platform::prep
 class platform::prep {
 
-  # Do pre-install tasks
+  # Ensure that the package manager has been updated so installs don't fail on new systems
   platform::utils::update_package_manager { 'platform::ensure_package_manager_is_updated': }
 
 }
