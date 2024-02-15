@@ -15,7 +15,6 @@ define platform::shells::zsh::ohmyzsh (
     command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" --unattended",
     creates => "${home}/.oh-my-zsh",
     user    => $user,
-    require => Package['zsh'],
     path    => ['/bin', '/usr/bin', '/usr/local/bin'],
   }
 }
