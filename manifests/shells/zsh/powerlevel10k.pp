@@ -9,5 +9,5 @@ define platform::shells::zsh::powerlevel10k (
   String $user,
   String $home,
 ) {
-  Notify { "setting up powerlevel10k for ${user} in ${home} with theme ${theme}": }
+  Notify { "setting up powerlevel10k for ${user} in ${home}": }
 }
