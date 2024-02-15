@@ -30,6 +30,12 @@ class platform::install {
     package_name => 'zsh',
   }
 
+  # Ensure ssh import tools are installed
+  platform::packages::package { 'platform::ensure_ssh_import_id':
+    ensure       => 'latest',
+    package_name => 'ssh-import-id',
+  }
+
   # Install packages from hiera
   include platform::packages
 }

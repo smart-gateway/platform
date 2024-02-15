@@ -73,5 +73,14 @@ class platform::users (
         key    => $key_details[key_value],
       }
     }
+
+    # Add any GitHub or Launchpad keys
+    $ids = get($details, 'import-keys', {})
+    $ids.each | String $key_id | {
+      platform::utils::import_ssh_keys { "import_${username}_keys_from_${key_id}":
+        id   => $key_id,
+        user => $username,
+      }
+    }
   }
 }
