@@ -11,18 +11,32 @@ define platform::shells::zsh::ohmyzsh (
   String $theme = 'robbyrussell',
   Optional[Array[String]] $plugins = ['git']
 ) {
-  exec { "install-oh-my-zsh-${user}":
-    command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended\"",
-    creates => "${home}/.oh-my-zsh",
-    user    => $user,
-    path    => ['/bin', '/usr/bin', '/usr/local/bin'],
-  }
+  if $ensure == 'present' {
+    exec { "install-oh-my-zsh-${user}":
+      command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended\"",
+      creates => "${home}/.oh-my-zsh",
+      user    => $user,
+      path    => ['/bin', '/usr/bin', '/usr/local/bin'],
+    }
 
-  file { "${home}/.zshrc":
-    ensure  => file,
-    owner   => $user,
-    group   => $user,
-    content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
-    require => Exec["install-oh-my-zsh-${user}"],
+    file { "${home}/.zshrc":
+      ensure  => file,
+      owner   => $user,
+      group   => $user,
+      content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
+      require => Exec["install-oh-my-zsh-${user}"],
+    }
+  } elsif $ensure == 'absent' {
+    file { "${home}/.oh-my-zsh":
+      ensure  => absent,
+      force   => true,
+      recurse => true,
+      user    => $user,
+    }
+
+    file { "${home}/.zshrc":
+      ensure => absent,
+      user   => $user,
+    }
   }
 }
