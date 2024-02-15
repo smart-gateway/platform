@@ -1,9 +1,22 @@
-# @summary A short summary of the purpose of this defined type.
+# Define: platform::shells::zsh::powerlevel10k
 #
-# A description of what this defined type does
+# This defined type manages the installation and configuration of the Powerlevel10k theme for Zsh,
+# either as a standalone theme or as part of the Oh-My-Zsh framework. It supports downloading a custom
+# Powerlevel10k configuration from a provided URL.
 #
-# @example
-#   platform::shells::zsh::powerlevel10k { 'namevar': }
+# Parameters:
+#   - ensure: Specifies the desired state of the Powerlevel10k theme ('present', 'absent', 'installed', 'latest', 'purged').
+#   - user: The username for whom the Powerlevel10k theme should be configured.
+#   - home: The home directory of the specified user.
+#   - with_oh_my_zsh: Indicates whether Powerlevel10k should be integrated with Oh-My-Zsh.
+#   - p10k_config: Optional URL from where the Powerlevel10k configuration (.p10k.zsh) can be downloaded.
+#
+# Behavior:
+#   - When `ensure` is 'present', 'installed', or 'latest', the Powerlevel10k theme is cloned into the appropriate directory,
+#     and the .zshrc file is configured to source the theme. If a `p10k_config` URL is provided, the configuration file
+#     is downloaded to the user's home directory.
+#   - Specific lines required by Powerlevel10k for instant prompt functionality are ensured in the .zshrc file.
+#   - When `ensure` is 'absent' or 'purged', the Powerlevel10k theme directory and the configuration file are removed.
 define platform::shells::zsh::powerlevel10k (
   Enum['present', 'absent', 'installed', 'latest', 'purged'] $ensure,
   String $user,

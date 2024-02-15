@@ -1,9 +1,20 @@
-# @summary A short summary of the purpose of this defined type.
+# Define: platform::shells::zsh::ohmyzsh
 #
-# A description of what this defined type does
+# This defined type manages the installation and basic configuration of Oh-My-Zsh for a specified user.
+# It ensures that Oh-My-Zsh is installed or removed based on the `ensure` parameter and configures the .zshrc
+# file with the specified theme and plugins.
 #
-# @example
-#   platform::shells::zsh::ohmyzsh { 'namevar': }
+# Parameters:
+#   - ensure: Controls the state of the Oh-My-Zsh installation. Valid options are 'present', 'absent', 'installed', 'latest', and 'purged'.
+#   - user: The username for whom Oh-My-Zsh should be configured. This user's home directory is used for installation.
+#   - home: The home directory of the specified user.
+#   - theme: The Oh-My-Zsh theme to apply. Defaults to 'robbyrussell'.
+#   - plugins: An optional array of Oh-My-Zsh plugins to enable. Defaults to ['git'].
+#
+# Behavior:
+#   - When `ensure` is set to 'present', 'installed', or 'latest', Oh-My-Zsh is installed, and the .zshrc file is configured but not replaced if it exists.
+#   - Specific lines ensuring the correct environment variables and settings are injected into .zshrc.
+#   - When `ensure` is set to 'absent' or 'purged', Oh-My-Zsh and the .zshrc file are removed from the user's home directory.
 define platform::shells::zsh::ohmyzsh (
   Enum['present', 'absent', 'installed', 'latest', 'purged'] $ensure,
   String $user,
