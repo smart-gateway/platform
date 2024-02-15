@@ -73,13 +73,12 @@ class platform::users (
       path   => $ssh_directory,
       mode   => '0700',
     }
-    file { "ensure_${username}_authorized_keys_exists":
-      ensure  => file,
-      path    => $authorized_keys_path,
-      owner   => $username,
-      group   => $username,
-      mode    => '0600',
-      content => '',
+    -> file { "ensure_${username}_authorized_keys_exists":
+      ensure => file,
+      path   => $authorized_keys_path,
+      owner  => $username,
+      group  => $username,
+      mode   => '0600',
     }
 
     # Add authorized keys for the user and import any GitHub or Launchpad keys
