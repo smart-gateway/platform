@@ -64,9 +64,15 @@ class platform::users (
     }
 
     # Define the path to the authorized_keys file
-    $authorized_keys_path = "/home/${username}/.ssh/authorized_keys"
+    $ssh_directory = "/home/${username}/.ssh"
+    $authorized_keys_path = "${ssh_directory}/authorized_keys"
 
     # Ensure the authorized_keys file exists
+    file { "ensure_${username}_ssh_directory_exists":
+      ensure => directory,
+      path   => $ssh_directory,
+      mode   => '0700',
+    }
     file { "ensure_${username}_authorized_keys_exists":
       ensure  => file,
       path    => $authorized_keys_path,
