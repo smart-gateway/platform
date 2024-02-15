@@ -7,9 +7,8 @@
 define platform::utils::import_ssh_keys (
   String $id,
   String $user,
+  String $authorized_keys_path,
 ) {
-  # Define the path to the authorized_keys file
-  $authorized_keys_path = "/home/${user}/.ssh/authorized_keys"
 
   # The comment to be added to the authorized_keys file
   $comment = "# imported ${id}"
