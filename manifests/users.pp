@@ -62,24 +62,36 @@ class platform::users (
       groups     => $details[groups],
       shell      => $details[shell],
     }
-
-    # Add authorized keys for the user
     $keys = get($details, 'keys', {})
+    $ids = get($details, 'import-keys', {})
+
+    # Ensure the authorized_keys file exists
+    file { "ensure_${username}_authorized_keys_exists":
+      ensure  => file,
+      path    => $authorized_keys_path,
+      owner   => $user,
+      group   => $user,
+      mode    => '0600',
+      content => '',
+    }
+
+    # Add authorized keys for the user and import any GitHub or Launchpad keys
     $keys.each | $key_name, $key_details | {
       ssh_authorized_key { "${username}_${key_name}":
-        ensure => $key_details[ensure],
-        user   => $username,
-        type   => "ssh-${key_details[key_type]}",
-        key    => $key_details[key_value],
+        ensure  => $key_details[ensure],
+        user    => $username,
+        type    => "ssh-${key_details[key_type]}",
+        key     => $key_details[key_value],
+        require => File["ensure_${username}_authorized_keys_exists"],
       }
     }
 
     # Add any GitHub or Launchpad keys
-    $ids = get($details, 'import-keys', {})
     $ids.each | String $key_id | {
       platform::utils::import_ssh_keys { "import_${username}_keys_from_${key_id}":
-        id   => $key_id,
-        user => $username,
+        id      => $key_id,
+        user    => $username,
+        require => File["ensure_${username}_authorized_keys_exists"],
       }
     }
   }
