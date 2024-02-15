@@ -5,4 +5,6 @@
 # @example
 #   include platform::config
 class platform::config {
+  # Install users from hiera
+  include platform::users
 }
