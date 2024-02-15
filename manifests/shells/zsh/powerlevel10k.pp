@@ -5,5 +5,8 @@
 # @example
 #   platform::shells::zsh::powerlevel10k { 'namevar': }
 define platform::shells::zsh::powerlevel10k (
+  Enum['present', 'absent', 'installed', 'latest', 'purged'] $ensure,
+  String $user,
+  String $home,
 ) {
 }
