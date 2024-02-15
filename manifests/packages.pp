@@ -24,8 +24,12 @@
 #     platform::packages::package { 'curl':
 #       ensure => 'latest',
 #     }
-define platform::packages::package ( String $ensure ) {
-  ensure_packages([$title], { ensure => $ensure })
+#
+define platform::packages::package (
+  Enum['present', 'absent', 'installed', 'latest', 'held', 'purged'] $ensure,
+  Optional[String[1]] $package_name = $title
+) {
+  ensure_packages([$package_name], { ensure => $ensure })
 }
 
 # Class: platform::packages
@@ -60,7 +64,7 @@ define platform::packages::package ( String $ensure ) {
 #     latest
 #     /./ (any specific version)
 class platform::packages {
-  if $::platform::packages != undef {
-    create_resources(platform::packages::package, $::platform::packages)
+  if $platform::packages != undef {
+    create_resources(platform::packages::package, $platform::packages)
   }
 }
