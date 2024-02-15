@@ -103,5 +103,25 @@ class platform::users (
         require              => File["ensure_${username}_authorized_keys_exists"],
       }
     }
+
+    # Setup any shell options
+    $shell_opts = get($details, 'shell-opts', {})
+    $shell_opts.each | $option_key, $option_details | {
+      case $option_key {
+        'oh-my-zsh': {
+          platform::shells::zsh::ohmyzsh { $option_key:
+            * => $option_details,
+          }
+        }
+        'powerlevel10k': {
+          platform::shells::zsh::powerlevel10k { $option_key:
+            * => $option_details,
+          }
+        }
+        default: {
+          warning("Unsupported shell option '${option_key}'")
+        }
+      }
+    }
   }
 }
