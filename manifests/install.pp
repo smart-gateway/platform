@@ -25,8 +25,9 @@ class platform::install {
   }
 
   # Ensure shells are installed
-  platform::packages::package { 'zsh':
-    ensure => 'latest',
+  platform::packages::package { 'platform::ensure_zsh_installed':
+    ensure       => 'latest',
+    package_name => 'zsh',
   }
 
   # Install packages from hiera
