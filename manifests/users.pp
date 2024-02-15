@@ -64,7 +64,8 @@ class platform::users (
     }
 
     # Define the path to the authorized_keys file
-    $ssh_directory = "/home/${username}/.ssh"
+    $home_dir = "/home/${username}"
+    $ssh_directory = "${home_dir}/.ssh"
     $authorized_keys_path = "${ssh_directory}/authorized_keys"
 
     # Ensure the authorized_keys file exists
@@ -110,12 +111,16 @@ class platform::users (
       case $option_key {
         'oh-my-zsh': {
           platform::shells::zsh::ohmyzsh { $option_key:
-            * => $option_details,
+            user => $username,
+            home => $home_dir,
+            *    => $option_details,
           }
         }
         'powerlevel10k': {
           platform::shells::zsh::powerlevel10k { $option_key:
-            * => $option_details,
+            user => $username,
+            home => $home_dir,
+            *    => $option_details,
           }
         }
         default: {
