@@ -11,5 +11,11 @@ define platform::shells::zsh::ohmyzsh (
   String $theme = 'robbyrussell',
   Optional[Array[String]] $plugins = ['git']
 ) {
-  Notify { "setting up oh-my-zsh for ${user} in ${home} with theme ${theme}": }
+  exec { "install-oh-my-zsh-${user}":
+    command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" --unattended",
+    creates => "${home}/.oh-my-zsh",
+    user    => $user,
+    require => Package['zsh'],
+    path    => ['/bin', '/usr/bin', '/usr/local/bin'],
+  }
 }
