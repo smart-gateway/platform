@@ -12,7 +12,7 @@ define platform::shells::zsh::ohmyzsh (
   Optional[Array[String]] $plugins = ['git']
 ) {
   exec { "install-oh-my-zsh-${user}":
-    command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" --unattended",
+    command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended\"",
     creates => "${home}/.oh-my-zsh",
     user    => $user,
     path    => ['/bin', '/usr/bin', '/usr/local/bin'],
