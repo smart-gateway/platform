@@ -15,8 +15,9 @@ define platform::utils::import_ssh_keys (
   $comment = "# imported ${id}"
 
   # Ensure the authorized_keys file exists
-  file { $authorized_keys_path:
+  file { "platform::ensure_file_${authorized_keys_path}_exists":
     ensure  => file,
+    path    => $authorized_keys_path,
     owner   => $user,
     group   => $user,
     mode    => '0600',
