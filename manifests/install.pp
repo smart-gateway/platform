@@ -33,6 +33,10 @@ class platform::install {
     ensure       => 'latest',
     package_name => 'git',
   }
+  platform::packages::package { 'platform::ensure_curl_installed':
+    ensure       => 'latest',
+    package_name => 'curl',
+  }
 
   # Ensure ssh import tools are installed
   platform::packages::package { 'platform::ensure_ssh_import_id':

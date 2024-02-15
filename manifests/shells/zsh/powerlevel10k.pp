@@ -9,6 +9,7 @@ define platform::shells::zsh::powerlevel10k (
   String $user,
   String $home,
   Boolean $with_oh_my_zsh = false,
+  Optional[String] $p10k_config = undef,
 ) {
   # Base path for powerlevel10k installation
   $p10k_path = $with_oh_my_zsh ? {
@@ -33,12 +34,29 @@ define platform::shells::zsh::powerlevel10k (
         require => Exec["clone-powerlevel10k-${user}"],
       }
     }
+
+    if $p10k_config {
+      exec { "download-p10k-config-${user}":
+        command => "curl -o ${home}/.p10k.zsh '${p10k_config}'",
+        unless  => "test -f ${home}/.p10k.zsh",
+        user    => $user,
+        path    => ['/bin', '/usr/bin', '/usr/local/bin'],
+        require => Exec["clone-powerlevel10k-${user}"],
+      }
+    }
+
+    # Ensure .p10k.zsh is present
   } elsif $ensure == 'absent' {
     # Remove the powerlevel10k directory
     file { $p10k_path:
       ensure  => absent,
       force   => true,
       recurse => true,
+    }
+
+    file { "${home}/.p10k.zsh":
+      ensure => absent,
+      user   => $user,
     }
   }
 }
