@@ -17,4 +17,12 @@ define platform::shells::zsh::ohmyzsh (
     user    => $user,
     path    => ['/bin', '/usr/bin', '/usr/local/bin'],
   }
+
+  file { "${home}/.zshrc":
+    ensure  => file,
+    owner   => $user,
+    group   => $user,
+    content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
+    require => Exec["install-oh-my-zsh-${user}"],
+  }
 }
