@@ -38,7 +38,7 @@ define platform::shells::zsh::powerlevel10k (
     # Remove the powerlevel10k directory
     file { $p10k_path:
       ensure  => absent,
-      force   => true, # Required to remove directories
+      force   => true,
       recurse => true,
     }
   }
