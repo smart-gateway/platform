@@ -31,7 +31,7 @@ define platform::utils::import_ssh_keys (
     unless  => "/bin/grep -Fxq '${comment}' ${authorized_keys_path}",
     path    => ['/usr/bin', '/bin', '/usr/sbin', '/sbin'],
     user    => $user,
-    require => File[$authorized_keys_path],
+    require => File["platform::before_adding_${id}_ensure_authorized_keys_exists"],
   }
 
   # File_line resource to manage the comment in the authorized_keys file
