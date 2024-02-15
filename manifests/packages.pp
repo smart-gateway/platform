@@ -43,11 +43,22 @@ define platform::packages::package ( String $ensure ) {
 #       ensure: 'latest'
 #     'tree':
 #       ensure: 'present'
+#     'vim':
+#       ensure: 'purged'
 #
 # Note:
 #   The platform::packages class checks if the $::platform::packages variable is defined
 #   and not undef before attempting to create resources, ensuring that package management
 #   is only attempted when package data is provided.
+#
+#   Allowed values:
+#     present
+#     absent
+#     purged
+#     disabled
+#     installed
+#     latest
+#     /./ (any specific version)
 class platform::packages {
   if $::platform::packages != undef {
     create_resources(platform::packages::package, $::platform::packages)
