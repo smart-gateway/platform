@@ -45,7 +45,7 @@ define platform::shells::zsh::ohmyzsh (
 
     file_line { 'zsh_plugins':
       path  => "${home}/.zshrc",
-      line  => "plugins=(${plugins.join(', ')})",
+      line  => "plugins=(${plugins.join(' ')})",
       match => '^plugins=\(',
     }
 
