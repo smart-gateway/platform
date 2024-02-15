@@ -22,7 +22,7 @@
 #                     hash_key_name:
 #                       key_type: ed25519 or rsa
 #                       key_value: <ssh_key_value>
-#   - manage_home: A boolean value that determines the default value for managing the home directories for the user accounts.
+#   - manage_home_default: A boolean value that determines the default value for managing the home directories for the user accounts.
 #                  If set to true, Puppet will ensure that the home directories are created or removed as needed,
 #                  based on the user's ensure attribute. Defaults to true.
 #
@@ -34,16 +34,43 @@
 #         'johndoe' => { 'ensure' => 'present', 'uid' => '1001', 'shell' => '/bin/bash', 'home' => '/home/johndoe' },
 #         'janedoe' => { 'ensure' => 'present', 'uid' => '1002', 'shell' => '/bin/zsh', 'home' => '/home/janedoe' },
 #       },
-#       manage_home => true,
+#       manage_home_default => true,
 #     }
 #
 # Note:
 #   Ensure that the provided user details match the expected format and that the specified attributes
-#   are valid for the user resource type. The manage_home parameter should be carefully considered in
+#   are valid for the user resource type. The manage_home_default parameter should be carefully considered in
 #   environments where home directory management is handled externally or where special configurations
 #   are required.
-class platform::users(
+class platform::users (
   Hash $users = {},
-  Boolean $manage_home = true,
+  Boolean $manage_home_default = true,
 ) {
+  $platform::users.each | $username, $details | {
+    # Get the manage_home value from the user or use the default
+    $manage_home = $details[managehome] == undef ? {
+      true    => $manage_home_default,
+      default => $details[managehome],
+    }
+
+    # Create user
+    user { $username:
+      ensure     => $details[ensure],
+      comment    => $details[comment],
+      password   => $details[password],
+      managehome => $manage_home,
+      groups     => $details[groups],
+      shell      => $details[shell],
+    }
+
+    # Add authorized keys for the user
+    $details[keys].each | $key_name, $key_details | {
+      ssh_authorized_key { "${username}_${key_name}":
+        ensure => $key_details[ensure],
+        user   => $username,
+        type   => "ssh-${key_details[key_type]}",
+        key    => $key_details[key_value],
+      }
+    }
+  }
 }
