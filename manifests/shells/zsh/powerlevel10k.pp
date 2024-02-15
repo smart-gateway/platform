@@ -21,7 +21,6 @@ define platform::shells::zsh::powerlevel10k (
       command => "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${p10k_path}",
       unless  => "test -d ${p10k_path}",
       user    => $user,
-      require => Package['git'],
       path    => ['/bin', '/usr/bin', '/usr/local/bin'],
     }
 
