@@ -29,9 +29,16 @@ define platform::packages::package (
   Enum['present', 'absent', 'installed', 'latest', 'held', 'purged'] $ensure,
   Optional[String] $package_name = $title
 ) {
-  package { $title:
-    ensure => $ensure,
-    name   => $package_name,
+  # Check if a Package resource with this title or name already exists
+  if ! defined(Package[$title]) and ! defined(Package[$package_name]) {
+    package { $title:
+      ensure => $ensure,
+      name   => $package_name,
+    }
+  } else {
+    notify { "Package ${title} is already declared in the catalog; Skipping declaration in platform::packages::package":
+      loglevel => 'debug',
+    }
   }
 }
 
