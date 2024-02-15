@@ -10,12 +10,12 @@ define platform::utils::import_ssh_keys (
 ) {
   # Define the path to the authorized_keys file
   $authorized_keys_path = "/home/${user}/.ssh/authorized_keys"
-
+  $authorized_keys_file_resource_title = "platform::before_adding_${id}_ensure_authorized_keys_exists"
   # The comment to be added to the authorized_keys file
   $comment = "# imported ${id}"
 
   # Ensure the authorized_keys file exists
-  file { "platform::before_adding_${id}_ensure_authorized_keys_exists":
+  file { $authorized_keys_file_resource_title:
     ensure  => file,
     path    => $authorized_keys_path,
     owner   => $user,
@@ -31,7 +31,7 @@ define platform::utils::import_ssh_keys (
     unless  => "/bin/grep -Fxq '${comment}' ${authorized_keys_path}",
     path    => ['/usr/bin', '/bin', '/usr/sbin', '/sbin'],
     user    => $user,
-    require => File["platform::before_adding_${id}_ensure_authorized_keys_exists"],
+    require => File[$authorized_keys_file_resource_title],
   }
 
   # File_line resource to manage the comment in the authorized_keys file
