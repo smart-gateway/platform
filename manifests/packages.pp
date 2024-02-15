@@ -27,9 +27,12 @@
 #
 define platform::packages::package (
   Enum['present', 'absent', 'installed', 'latest', 'held', 'purged'] $ensure,
-  Optional[String[1]] $package_name = $title
+  Optional[String] $package_name = $title
 ) {
-  ensure_packages([$package_name], { ensure => $ensure })
+  package { $title:
+    ensure => $ensure,
+    name   => $package_name,
+  }
 }
 
 # Class: platform::packages
