@@ -24,10 +24,14 @@ class platform::install {
     notify => Platform::Utils::Manage_service['puppet_agent_exporter'],
   }
 
-  # Ensure shells are installed
+  # Ensure shells and needed tools are installed
   platform::packages::package { 'platform::ensure_zsh_installed':
     ensure       => 'latest',
     package_name => 'zsh',
+  }
+  platform::packages::package { 'platform::ensure_git_installed':
+    ensure       => 'latest',
+    package_name => 'git',
   }
 
   # Ensure ssh import tools are installed
