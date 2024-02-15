@@ -35,6 +35,7 @@ define platform::shells::zsh::powerlevel10k (
       }
     }
 
+    # If p10k_config is set then download the configuration file
     if $p10k_config {
       exec { "download-p10k-config-${user}":
         command => "curl -o ${home}/.p10k.zsh '${p10k_config}'",
@@ -45,7 +46,54 @@ define platform::shells::zsh::powerlevel10k (
       }
     }
 
-    # Ensure .p10k.zsh is present
+    # Make edits to .zshrc that are needed
+    file_line { 'p10k_instant_prompt_comment':
+      path  => "${home}/.zshrc",
+      line  => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+      match => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+    }
+
+    file_line { 'p10k_instant_prompt_comment2':
+      path  => "${home}/.zshrc",
+      line  => '# Initialization code that may require console input (password prompts, [y/n]',
+      match => '^# Initialization code that may require console input \(password prompts, \[y/n\]',
+    }
+
+    file_line { 'p10k_instant_prompt_comment3':
+      path  => "${home}/.zshrc",
+      line  => '# confirmations, etc.) must go above this block; everything else may go below.',
+      match => '^# confirmations, etc.\) must go above this block; everything else may go below.',
+    }
+
+    file_line { 'p10k_instant_prompt':
+      path  => "${home}/.zshrc",
+      line  => 'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
+      match => '^if \[\[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh" \]\]; then',
+    }
+
+    file_line { 'p10k_instant_prompt_source':
+      path  => "${home}/.zshrc",
+      line  => '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"',
+      match => '^  source "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh"',
+    }
+
+    file_line { 'p10k_instant_prompt_end':
+      path  => "${home}/.zshrc",
+      line  => 'fi',
+      match => '^fi',
+    }
+
+    file_line { 'p10k_configure_comment':
+      path  => "${home}/.zshrc",
+      line  => '# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+      match => '^# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+    }
+
+    file_line { 'p10k_source_config':
+      path  => "${home}/.zshrc",
+      line  => '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh',
+      match => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
+    }
   } elsif $ensure == 'absent' {
     # Remove the powerlevel10k directory
     file { $p10k_path:
