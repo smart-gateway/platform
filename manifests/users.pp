@@ -64,7 +64,8 @@ class platform::users (
     }
 
     # Add authorized keys for the user
-    $details[keys].each | $key_name, $key_details | {
+    $keys = get($details, 'key', {})
+    $keys.each | $key_name, $key_details | {
       ssh_authorized_key { "${username}_${key_name}":
         ensure => $key_details[ensure],
         user   => $username,
