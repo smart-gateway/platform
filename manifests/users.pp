@@ -70,8 +70,8 @@ class platform::users (
     file { "ensure_${username}_authorized_keys_exists":
       ensure  => file,
       path    => $authorized_keys_path,
-      owner   => $user,
-      group   => $user,
+      owner   => $username,
+      group   => $username,
       mode    => '0600',
       content => '',
     }
