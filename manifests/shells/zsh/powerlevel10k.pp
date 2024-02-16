@@ -40,11 +40,21 @@ define platform::shells::zsh::powerlevel10k (
 
     # Only add source line if not using with oh-my-zsh, as oh-my-zsh handles this
     if !$with_oh_my_zsh {
+      # Ensure .zshrc exists - don't replace it if the contents just don't match
+      file { "${home}/.zshrc":
+        ensure  => file,
+        owner   => $user,
+        group   => $user,
+        replace => false,
+        content => template('platform/shells/zsh/powerlevel10k/zshrc.erb'),
+        require => Exec["clone-powerlevel10k-${user}"],
+      }
+
       file_line { "source-powerlevel10k-${user}":
         path    => "${home}/.zshrc",
         line    => "source '${p10k_path}/powerlevel10k.zsh-theme'",
         match   => "^source .*/powerlevel10k.zsh-theme\$",
-        require => Exec["clone-powerlevel10k-${user}"],
+        require => File["${home}/.zshrc"],
       }
     }
 
