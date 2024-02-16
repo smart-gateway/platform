@@ -117,7 +117,6 @@ define platform::shells::zsh::powerlevel10k (
 
     file { "${home}/.p10k.zsh":
       ensure => absent,
-      user   => $user,
     }
   }
 }

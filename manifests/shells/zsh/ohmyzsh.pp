@@ -71,13 +71,11 @@ define platform::shells::zsh::ohmyzsh (
       ensure  => absent,
       force   => true,
       recurse => true,
-      user    => $user,
     }
 
     # Remove .zshrc file
     file { "${home}/.zshrc":
       ensure => absent,
-      user   => $user,
     }
   }
 }
