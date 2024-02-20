@@ -16,7 +16,7 @@ define platform::utils::remove_line (
     command     => "sed -i '/${line}/d' ${filename}",
     path        => ['/bin', '/usr/bin', '/usr/local/bin'],
     onlyif      => "grep -q '${match}' ${filename}",
-    subscribe   => Exec["check_${filename}_exists"],
+    subscribe   => Exec["check_${filename}_exists_before_${title}"],
     refreshonly => true,
   }
 }
