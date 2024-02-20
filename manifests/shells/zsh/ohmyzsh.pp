@@ -33,13 +33,13 @@ define platform::shells::zsh::ohmyzsh (
 
     # Ensure .zshrc exists - don't replace it if the contents just don't match
     file { "ensure_${home}_has_zshrc_template_for_ohmyzsh":
-      ensure => file,
-      path   => "${home}/.zshrc",
-      owner    => $user,
-      group    => $user,
-      replace  => false,
-      content  => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
-      require  => Exec["install-oh-my-zsh-${user}"],
+      ensure  => file,
+      path    => "${home}/.zshrc",
+      owner   => $user,
+      group   => $user,
+      replace => false,
+      content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
+      require => Exec["install-oh-my-zsh-${user}"],
     }
 
     # Ensure lines are in .zshrc
@@ -74,9 +74,14 @@ define platform::shells::zsh::ohmyzsh (
       recurse => true,
     }
 
+    # TODO: This section was removed because we can't assume that not having oh-my-zsh, or more specifically having it
+    #   set to be absent means that we don't have anything else that is using or managing the .zshrc file. Ideally
+    #   in the future if we get more sophisticated file management we can push/pull specific lines but for now we
+    #   should just leave it alone.
+    # TODO: WE DO NEED TO TEST WHAT THIS MEANS IF WE HAVE oh-my-zsh enabled then absent do we get errors from the .zshrc?
     # Remove .zshrc file
-    file { "${home}/.zshrc":
-      ensure => absent,
-    }
+    # file { "${home}/.zshrc":
+    #   ensure => absent,
+    # }
   }
 }
