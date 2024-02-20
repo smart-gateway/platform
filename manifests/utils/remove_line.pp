@@ -4,7 +4,7 @@ define platform::utils::remove_line (
   String $match,
 ) {
   # Check if the file exists
-  exec { "check_${filename}_exists":
+  exec { "check_${filename}_exists_before_${title}":
     command     => '/bin/true',
     path        => ['/bin', '/usr/bin', '/usr/local/bin'],
     onlyif      => "test -f ${filename}",
