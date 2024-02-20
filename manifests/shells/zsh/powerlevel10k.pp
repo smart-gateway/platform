@@ -133,8 +133,8 @@ define platform::shells::zsh::powerlevel10k (
     # Remove lines from .zshrc if it exists
     platform::utils::remove_line { 'remove_p10k_instant_prompt_comment':
       filename => "${home}/.zshrc",
-      line             => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
-      match            => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+      line     => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+      match    => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
     }
 
     platform::utils::remove_line { 'remove_p10k_instant_prompt_comment2':
@@ -181,8 +181,8 @@ define platform::shells::zsh::powerlevel10k (
 
     platform::utils::remove_line { 'remove_p10k_source_theme':
       filename => "${home}/.zshrc",
-      line     => 'source \'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'',
-      match    => '^source \'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'',
+      line     => "source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
+      match    => "^source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
     }
   }
 }
