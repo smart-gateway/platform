@@ -41,8 +41,9 @@ define platform::shells::zsh::powerlevel10k (
     # Only add source line if not using with oh-my-zsh, as oh-my-zsh handles this
     if !$with_oh_my_zsh {
       # Ensure .zshrc exists - don't replace it if the contents just don't match
-      file { "${home}/.zshrc":
+      file { "ensure_${home}_has_zshrc_template":
         ensure  => file,
+        path    => "${home}/.zshrc",
         owner   => $user,
         group   => $user,
         replace => false,
