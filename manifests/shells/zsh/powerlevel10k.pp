@@ -175,7 +175,7 @@ define platform::shells::zsh::powerlevel10k (
 
     platform::utils::remove_line { 'remove_p10k_source_config':
       filename => "${home}/.zshrc",
-      line     => '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh',
+      line     => '\[\[ ! -f ~/.p10k.zsh \]\] || source ~/.p10k.zsh',
       match    => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
     }
 
