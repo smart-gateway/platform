@@ -136,8 +136,14 @@ define platform::shells::zsh::powerlevel10k (
       incl    => '/home/ben/.zshrc',
       changes => [
         "rm *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then']",
-        "rm *[.='  source \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\"']",
+        "rm *[. =~ regexp('\\s*source \"\\\$\\{XDG_CACHE_HOME:-\\\$HOME/.cache}/p10k-instant-prompt-\\\$\\{(\\%):-%n}.zsh\"')]",
         "rm *[.='fi']",
+        "rm *[. =~ regexp('.*Enable Powerlevel10k instant prompt.*')]",
+        "rm *[. =~ regexp('.*Initialization code that may require console input.*')]",
+        "rm *[. =~ regexp('.*must go above this block; everything else may go below.*')]",
+        "rm *[. =~ regexp('.*To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.*')]",
+        "rm *[. =~ regexp('.*\\[\\[ ! -f ~/.p10k.zsh \\]\\] \\|\\| source ~/.p10k.zsh.*')]",
+        "rm *[. =~ regexp('.*source \\'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\\'.*')]",
       ],
       onlyif  => "match *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then'] size > 0",
     }
