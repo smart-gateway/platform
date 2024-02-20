@@ -32,13 +32,14 @@ define platform::shells::zsh::ohmyzsh (
     }
 
     # Ensure .zshrc exists - don't replace it if the contents just don't match
-    file { "${home}/.zshrc":
-      ensure  => file,
-      owner   => $user,
-      group   => $user,
-      replace => false,
-      content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
-      require => Exec["install-oh-my-zsh-${user}"],
+    file { "ensure_${home}_has_zshrc_template_for_ohmyzsh":
+      ensure => file,
+      path   => "${home}/.zshrc",
+      owner    => $user,
+      group    => $user,
+      replace  => false,
+      content  => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
+      require  => Exec["install-oh-my-zsh-${user}"],
     }
 
     # Ensure lines are in .zshrc
