@@ -129,5 +129,64 @@ define platform::shells::zsh::powerlevel10k (
     file { "${home}/.p10k.zsh":
       ensure => absent,
     }
+
+    # Check if .zshrc exists and remove specific lines
+    if $home and $home != '' and $home != undef {
+      file_line { 'remove_p10k_instant_prompt_comment':
+        ensure => absent,
+        line   => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+        match  => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_instant_prompt_comment2':
+        ensure => absent,
+        line   => '# Initialization code that may require console input (password prompts, [y/n]',
+        match  => '^# Initialization code that may require console input \(password prompts, \[y/n\]',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_instant_prompt_comment3':
+        ensure => absent,
+        line   => '# confirmations, etc.) must go above this block; everything else may go below.',
+        match  => '^# confirmations, etc.\) must go above this block; everything else may go below.',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_instant_prompt':
+        ensure => absent,
+        line   => 'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
+        match  => '^if \[\[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh" \]\]; then',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_instant_prompt_source':
+        ensure => absent,
+        line   => '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"',
+        match  => '^  source "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh"',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_instant_prompt_end':
+        ensure => absent,
+        line   => 'fi',
+        match  => '^fi',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_configure_comment':
+        ensure => absent,
+        line   => '# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+        match  => '^# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+        path   => "${home}/.zshrc",
+      }
+
+      file_line { 'remove_p10k_source_config':
+        ensure => absent,
+        line   => '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh',
+        match  => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
+        path   => "${home}/.zshrc",
+      }
+    }
   }
 }
