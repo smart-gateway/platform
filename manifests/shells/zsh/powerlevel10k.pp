@@ -130,59 +130,71 @@ define platform::shells::zsh::powerlevel10k (
       ensure => absent,
     }
 
-    # Remove lines from .zshrc if it exists
-    platform::utils::remove_line { 'remove_p10k_instant_prompt_comment':
-      filename => "${home}/.zshrc",
-      line     => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
-      match    => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+    augeas { 'remove-p10k-instant-prompt-from-zshrc':
+      context => '/files/home/ben/.zshrc',
+      lens    => 'Simplelines.lns',
+      incl    => '/home/ben/.zshrc',
+      changes => [
+        "rm *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then']",
+        "rm *[.='  source \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\"']",
+        "rm *[.='fi']",
+      ],
+      onlyif  => "match *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then'] size > 0",
     }
 
-    platform::utils::remove_line { 'remove_p10k_instant_prompt_comment2':
-      filename => "${home}/.zshrc",
-      line     => '# Initialization code that may require console input (password prompts, [y/n]',
-      match    => '^# Initialization code that may require console input \(password prompts, \[y/n\]',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_instant_prompt_comment3':
-      filename => "${home}/.zshrc",
-      line     => '# confirmations, etc.) must go above this block; everything else may go below.',
-      match    => '^# confirmations, etc.\) must go above this block; everything else may go below.',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_instant_prompt':
-      filename => "${home}/.zshrc",
-      line     => 'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
-      match    => '^if \[\[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh" \]\]; then',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_instant_prompt_source':
-      filename => "${home}/.zshrc",
-      line     => '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"',
-      match    => '^  source "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh"',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_instant_prompt_end':
-      filename => "${home}/.zshrc",
-      line     => 'fi',
-      match    => '^fi',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_configure_comment':
-      filename => "${home}/.zshrc",
-      line     => '# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
-      match    => '^# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_source_config':
-      filename => "${home}/.zshrc",
-      line     => '\[\[ ! -f ~/.p10k.zsh \]\] || source ~/.p10k.zsh',
-      match    => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
-    }
-
-    platform::utils::remove_line { 'remove_p10k_source_theme':
-      filename => "${home}/.zshrc",
-      line     => "source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
-      match    => "^source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
-    }
+    # # Remove lines from .zshrc if it exists
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt_comment':
+    #   filename => "${home}/.zshrc",
+    #   line     => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+    #   match    => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt_comment2':
+    #   filename => "${home}/.zshrc",
+    #   line     => '# Initialization code that may require console input (password prompts, [y/n]',
+    #   match    => '^# Initialization code that may require console input \(password prompts, \[y/n\]',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt_comment3':
+    #   filename => "${home}/.zshrc",
+    #   line     => '# confirmations, etc.) must go above this block; everything else may go below.',
+    #   match    => '^# confirmations, etc.\) must go above this block; everything else may go below.',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt':
+    #   filename => "${home}/.zshrc",
+    #   line     => 'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
+    #   match    => '^if \[\[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh" \]\]; then',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt_source':
+    #   filename => "${home}/.zshrc",
+    #   line     => '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"',
+    #   match    => '^  source "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh"',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_instant_prompt_end':
+    #   filename => "${home}/.zshrc",
+    #   line     => 'fi',
+    #   match    => '^fi',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_configure_comment':
+    #   filename => "${home}/.zshrc",
+    #   line     => '# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+    #   match    => '^# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_source_config':
+    #   filename => "${home}/.zshrc",
+    #   line     => '\[\[ ! -f ~/.p10k.zsh \]\] || source ~/.p10k.zsh',
+    #   match    => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
+    # }
+    #
+    # platform::utils::remove_line { 'remove_p10k_source_theme':
+    #   filename => "${home}/.zshrc",
+    #   line     => "source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
+    #   match    => "^source '/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'",
+    # }
   }
 }
