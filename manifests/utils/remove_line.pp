@@ -5,10 +5,9 @@ define platform::utils::remove_line (
 ) {
   # Check if the file exists
   exec { "check_${filename}_exists_before_${title}":
-    command     => '/bin/true',
-    path        => ['/bin', '/usr/bin', '/usr/local/bin'],
-    onlyif      => "test -f ${filename}",
-    refreshonly => true,
+    command => '/bin/true',
+    path    => ['/bin', '/usr/bin', '/usr/local/bin'],
+    onlyif  => "test -f ${filename}",
   }
 
   # Remove the specified line from the file if it exists
