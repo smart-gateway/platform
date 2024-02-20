@@ -188,7 +188,7 @@ define platform::shells::zsh::powerlevel10k (
         path   => "${home}/.zshrc",
       }
 
-      file_line { 'remove_p10k_source_config':
+      file_line { 'remove_p10k_source_theme':
         ensure => absent,
         line   => 'source \'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'',
         match  => '^source \'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\'',
