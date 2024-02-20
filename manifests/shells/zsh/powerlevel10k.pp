@@ -50,7 +50,7 @@ define platform::shells::zsh::powerlevel10k (
         require => Exec["clone-powerlevel10k-${user}"],
       }
 
-      file_line { "source-powerlevel10k-${user}":
+      file_line { "source_powerlevel10k_${user}":
         path    => "${home}/.zshrc",
         line    => "source '${p10k_path}/powerlevel10k.zsh-theme'",
         match   => "^source .*/powerlevel10k.zsh-theme\$",
