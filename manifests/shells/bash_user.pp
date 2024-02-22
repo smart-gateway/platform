@@ -28,9 +28,9 @@ define platform::shells::bash_user (
 
     # Add line to their .bashrc
     exec { "add_init_to_${home_dir}/.bashrc":
-      command => "sed -i '1i[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${HOME}/.bashrc",
+      command => "sed -i '1i[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${home_dir}/.bashrc",
       path    => ['/bin', '/usr/bin'],
-      unless  => "grep -qx '[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${HOME}/.bashrc",
+      unless  => "grep -qx '[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${home_dir}/.bashrc",
     }
   }
 }
