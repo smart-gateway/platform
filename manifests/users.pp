@@ -44,6 +44,7 @@
 #   are required.
 class platform::users (
   Hash $users = {},
+  String $managed_startup_scripts_user_dir,
   Boolean $manage_home_default = true,
 ) {
   $platform::users.each | $username, $details | {
@@ -118,6 +119,11 @@ class platform::users (
     $shell_opts = get($details, 'shell-opts', {})
     case $shell {
       '/bin/bash': {
+        # Ensure users bash customizations are executed
+        platform::shells::bash_user { "bash_user_${username}":
+          managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
+          shell_options                    => $shell_opts,
+        }
       }
       '/bin/zsh': {
       }

@@ -13,5 +13,7 @@ class platform::config {
   include platform::shells::zsh
 
   # Install users from hiera
-  include platform::users
+  class { 'platform::users':
+    managed_startup_scripts_user_dir => $platform::managed_shell_startup_user_dir,
+  }
 }
