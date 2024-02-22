@@ -32,5 +32,11 @@ define platform::shells::bash_user (
       path    => ['/bin', '/usr/bin'],
       unless  => "grep -qx '[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${home_dir}/.bashrc",
     }
+
+    # Ensure the init file is present
+    file { "${user_scripts_dir}/.init.sh":
+      ensure  => file,
+      content => epp('platform/shells/bash/users/.init.sh.epp'),
+    }
   }
 }
