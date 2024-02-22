@@ -26,7 +26,7 @@ class platform::shells::bash (
 
     file { '/etc/skel/.profile':
       ensure  => file,
-      content => epp('platform/shells/bash/etc/skel/.profile'),
+      content => epp('platform/shells/bash/etc/skel/.profile.epp'),
     }
 
     # Modify global configuration files
