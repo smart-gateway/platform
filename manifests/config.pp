@@ -10,7 +10,9 @@ class platform::config {
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
   }
 
-  include platform::shells::zsh
+  class { 'platform::shells::zsh':
+    managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
+  }
 
   # Install users from hiera
   class { 'platform::users':
