@@ -6,13 +6,17 @@
 #   include platform::shells::bash
 class platform::shells::bash (
   String $managed_startup_scripts_global_dir,
-  String $managed_startup_strings_user_dir,
   String $system_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin',
   Boolean $manage_startup_scripts = true,
 ) {
   if $manage_startup_scripts {
     $global_scripts_dir = sprintf($managed_startup_scripts_global_dir, 'bash')
-    $user_scripts_dir = sprintf($managed_startup_strings_user_dir, 'bash')
+
+    # Ensure global directory exists
+    file { $global_scripts_dir:
+      ensure => directory,
+      purge  => true,
+    }
 
     # Modify skel files
     file { '/etc/skel/.bashrc':
