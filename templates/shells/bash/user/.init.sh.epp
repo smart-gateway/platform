@@ -1,6 +1,3 @@
-<#-
-  @summary This template configures the /etc/profile file
--#>
 #!/bin/bash
 ################################################################################################
 # This file is managed by Puppet.

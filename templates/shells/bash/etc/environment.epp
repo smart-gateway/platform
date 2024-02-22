@@ -1,7 +1,6 @@
-<#-
-  @summary This template configures the /etc/environment file
-  @param path The system path to put in the /etc/environment file
--#>
+<%- |
+  String $path,
+| %>
 ################################################################################################
 # This file is managed by Puppet.
 # DO NOT EDIT. Changes will be overwritten.

@@ -1,7 +1,6 @@
-<#-
-  @summary This template configures the /etc/environment file
-  @param directory The directory to store the managed startup files inside of
--#>
+<%- |
+  String $directory,
+| -%>
 ################################################################################################
 # This file is managed by Puppet.
 # DO NOT EDIT. Changes will be overwritten.
