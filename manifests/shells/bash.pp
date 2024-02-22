@@ -17,28 +17,28 @@ class platform::shells::bash (
     # Modify skel files
     file { '/etc/skel/.bashrc':
       ensure  => file,
-      content => epp('shells/bash/etc/skel/.bashrc.epp'),
+      content => epp('platform/shells/bash/etc/skel/.bashrc.epp'),
     }
 
     file { '/etc/skel/.profile':
       ensure  => file,
-      content => epp('shells/bash/etc/skel/.profile'),
+      content => epp('platform/shells/bash/etc/skel/.profile'),
     }
 
     # Modify global configuration files
     file { '/etc/environment':
       ensure  => file,
-      content => epp('shells/bash/etc/environment.epp', { 'path' => $system_path }),
+      content => epp('platform/shells/bash/etc/environment.epp', { 'path' => $system_path }),
     }
 
     file { '/etc/profile':
       ensure  => file,
-      content => epp('shells/bash/etc/profile.epp'),
+      content => epp('platform/shells/bash/etc/profile.epp'),
     }
 
     file { '/etc/bash.bashrc':
       ensure  => file,
-      content => epp('shells/bash/etc/bash.bashrc.epp', { 'directory' => $global_scripts_dir }),
+      content => epp('platform/shells/bash/etc/bash.bashrc.epp', { 'directory' => $global_scripts_dir }),
     }
   }
 }
