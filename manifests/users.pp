@@ -121,7 +121,7 @@ class platform::users (
       '/bin/bash': {
         # Ensure users bash customizations are executed
         platform::shells::bash_user { "bash_user_${username}":
-          managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
+          managed_startup_scripts_user_dir => "${home_dir}/${managed_startup_scripts_user_dir}",
           shell_options                    => $shell_opts,
         }
       }
