@@ -1,0 +1,9 @@
+<#-
+  @summary This template configures the /etc/skel/.bashrc file
+-#>
+################################################################################################
+# This file is managed by Puppet.
+# DO NOT EDIT. Changes will be overwritten.
+################################################################################################
+
+# Content for the template to be provided by Brent.

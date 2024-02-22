@@ -53,6 +53,14 @@ class platform::users (
       default => $details[managehome],
     }
 
+    # Handle conversion of the shell value from Hiera into the actual shell
+    $shell = $details['shell'] ? {
+      /^(zsh|\/bin\/zsh)$/     => '/bin/zsh',
+      /^(ksh|\/bin\/ksh)$/     => '/bin/ksh',
+      /^(bash|\/bin\/bash|)$/  => '/bin/bash',
+      default                  => fail("Unsupported shell: ${details['shell']}")
+    }
+
     # Create user
     user { $username:
       ensure     => $details[ensure],
@@ -60,7 +68,7 @@ class platform::users (
       password   => $details[password],
       managehome => $manage_home,
       groups     => $details[groups],
-      shell      => $details[shell],
+      shell      => $shell,
     }
 
     # Define the path to the authorized_keys file
@@ -105,28 +113,37 @@ class platform::users (
       }
     }
 
-    # Setup any shell options
+    # Setup shell
     $shell_opts = get($details, 'shell-opts', {})
-    $shell_opts.each | $option_key, $option_details | {
-      case $option_key {
-        'oh-my-zsh': {
-          platform::shells::zsh::ohmyzsh { $option_key:
-            user => $username,
-            home => $home_dir,
-            *    => $option_details,
-          }
-        }
-        'powerlevel10k': {
-          platform::shells::zsh::powerlevel10k { $option_key:
-            user => $username,
-            home => $home_dir,
-            *    => $option_details,
-          }
-        }
-        default: {
-          warning("Unsupported shell option '${option_key}'")
-        }
+    case $shell {
+      '/bin/bash': {
       }
+      '/bin/zsh': {
+      }
+      default: { fail("Unsupported shell: ${details['shell']}") }
     }
+
+    # # Setup any shell options
+    # $shell_opts.each | $option_key, $option_details | {
+    #   case $option_key {
+    #     'oh-my-zsh': {
+    #       platform::shells::zsh::ohmyzsh { $option_key:
+    #         user => $username,
+    #         home => $home_dir,
+    #         *    => $option_details,
+    #       }
+    #     }
+    #     'powerlevel10k': {
+    #       platform::shells::zsh::powerlevel10k { $option_key:
+    #         user => $username,
+    #         home => $home_dir,
+    #         *    => $option_details,
+    #       }
+    #     }
+    #     default: {
+    #       warning("Unsupported shell option '${option_key}'")
+    #     }
+    #   }
+    # }
   }
 }

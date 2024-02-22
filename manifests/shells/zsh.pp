@@ -1,9 +1,8 @@
-# @summary A short summary of the purpose of this defined type.
+# @summary A short summary of the purpose of this class
 #
-# A description of what this defined type does
+# A description of what this class does
 #
 # @example
-#   platform::shells::zsh { 'namevar': }
-define platform::shells::zsh (
-) {
+#   include platform::shells::zsh
+class platform::shells::zsh {
 }
