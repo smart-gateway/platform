@@ -55,6 +55,7 @@ class platform::users (
 
     # Handle conversion of the shell value from Hiera into the actual shell
     $shell = $details['shell'] ? {
+      /^(sh|\/bin\/sh)$/       => '/bin/sh',
       /^(zsh|\/bin\/zsh)$/     => '/bin/zsh',
       /^(ksh|\/bin\/ksh)$/     => '/bin/ksh',
       /^(bash|\/bin\/bash|)$/  => '/bin/bash',
@@ -119,6 +120,8 @@ class platform::users (
       '/bin/bash': {
       }
       '/bin/zsh': {
+      }
+      '/bin/sh': {
       }
       default: { fail("Unsupported shell: ${details['shell']}") }
     }
