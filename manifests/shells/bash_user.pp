@@ -30,13 +30,13 @@ define platform::shells::bash_user (
     exec { "add_init_to_${home_dir}/.bashrc":
       command => "sed -i '1i[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${home_dir}/.bashrc",
       path    => ['/bin', '/usr/bin'],
-      unless  => "grep -qx '[ -d \"\$HOME/.bashrc.managed.d\" ] && [ -f \"\$HOME/.bashrc.managed.d/.init.sh\" ] && source \"\$HOME/.bashrc.managed.d/.init.sh\"' ${home_dir}/.bashrc",
+      unless  => "grep -qxF 'source \"\$HOME/.bashrc.managed.d/.init.sh\" ${home_dir}/.bashrc",
     }
 
     # Ensure the init file is present
     file { "${user_scripts_dir}/.init.sh":
       ensure  => file,
-      content => epp('platform/shells/bash/users/.init.sh.epp'),
+      content => epp('platform/shells/bash/user/.init.sh.epp'),
     }
   }
 }
