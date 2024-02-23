@@ -82,6 +82,8 @@ class platform::users (
     file { "ensure_${username}_ssh_directory_exists":
       ensure => directory,
       path   => $ssh_directory,
+      owner  => $username,
+      group  => $username,
       mode   => '0700',
     }
     -> file { "ensure_${username}_authorized_keys_exists":
