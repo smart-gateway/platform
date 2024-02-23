@@ -21,12 +21,12 @@ class platform::shells::zsh (
     # Modify skel files
     file { '/etc/skel/.zshrc':
       ensure  => file,
-      content => epp('platform/shells/zsh/etc/skel/.zshrc.epp'),
+      content => epp('platform/shells/zsh/etc/skel/zshrc.epp'),
     }
 
     file { '/etc/skel/.zprofile':
       ensure  => file,
-      content => epp('platform/shells/zsh/etc/skel/.zprofile.epp'),
+      content => epp('platform/shells/zsh/etc/skel/zprofile.epp'),
     }
 
     # Modify global configuration files
