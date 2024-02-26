@@ -118,22 +118,28 @@ class platform::users (
     }
 
     # Setup shell
-    $shell_opts = get($details, 'shell-opts', {})
-    case $shell {
-      '/bin/bash': {
-        # Ensure users bash customizations are executed
-        platform::shells::bash_user { "bash_user_${username}":
-          home_dir                         => $home_dir,
-          managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
-          shell_options                    => $shell_opts,
-        }
-      }
-      '/bin/zsh': {
-      }
-      '/bin/sh': {
-      }
-      default: { fail("Unsupported shell: ${details['shell']}") }
+    $shell_opts = get($details, 'shell-options', {})
+    $zsh_options = get($shell_opts, 'zsh', {})
+    $bash_options = get($shell_opts, 'bash', {})
+    $sh_options = get($shell_opts, 'sh', {})
+
+    # Run initialization for each shell so that the user can move back and forth with consistency
+    # Ensure users bash customizations are executed
+    platform::shells::bash_user { "bash_user_${username}":
+      home_dir                         => $home_dir,
+      managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
+      shell_options                    => $bash_options,
     }
+
+    # Ensure users zsh customizations are executed
+    platform::shells::zsh_user { "zsh_user_${username}":
+      home_dir                         => $home_dir,
+      managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
+      shell_options                    => $zsh_options,
+    }
+
+    # Ensure users sh customizations are executed
+    # TODO
 
     # # Setup any shell options
     # $shell_opts.each | $option_key, $option_details | {
