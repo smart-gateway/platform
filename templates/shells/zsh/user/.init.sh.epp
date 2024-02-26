@@ -7,6 +7,9 @@
 # Directory containing the script files
 script_dir="$HOME/.zshrc.managed.d"
 
+# Enable nullglob to avoid errors when no files match the glob pattern
+setopt nullglob
+
 # Loop through all .sh files in the directory, excluding hidden files
 for script in "$script_dir"/*.sh; do
     # Check if the file is a regular file (not a directory or a link)
