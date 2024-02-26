@@ -25,4 +25,40 @@ define platform::shells::zsh_user (
   # Boolean $pure = false,
   # Boolean $fast_syntax_highlighting = false,
   # Boolean $zsh_async = false,
+  # Setup startup scripts
+  if $manage_startup_scripts {
+    $user_scripts_dir = sprintf("${home_dir}/${managed_startup_scripts_user_dir}", 'zsh')
+
+    # Ensure user directory exists
+    file { $user_scripts_dir:
+      ensure => directory,
+      purge  => true,
+    }
+
+    # Ensure their .profile file is managed
+    file { "${home_dir}/.zprofile":
+      ensure  => file,
+      content => epp('platform/shells/zsh/user/.zprofile.epp'),
+    }
+
+    # Ensure their .zshrc file exists (don't manage)
+    file { "${home_dir}/.zshrc":
+      ensure  => file,
+      content => epp('platform/shells/zsh/user/.zshrc.epp'),
+      replace => false,
+    }
+
+    # Add line to their .zshrc
+    exec { "add_init_to_${home_dir}/.zshrc":
+      command => "sed -i '1i[ -d \"\$HOME/.zshrc.managed.d\" ] && [ -f \"\$HOME/.zshrc.managed.d/.init.sh\" ] && source \"\$HOME/.zshrc.managed.d/.init.sh\"' ${home_dir}/.zshrc",
+      path    => ['/bin', '/usr/bin'],
+      unless  => "grep -q 'source \"\$HOME/.zshrc.managed.d/.init.sh\"' ${home_dir}/.zshrc",
+    }
+
+    # Ensure the init file is present
+    file { "${user_scripts_dir}/.init.sh":
+      ensure  => file,
+      content => epp('platform/shells/zsh/user/.init.sh.epp'),
+    }
+  }
 }
