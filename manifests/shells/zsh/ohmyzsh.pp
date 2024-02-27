@@ -36,7 +36,7 @@ define platform::shells::zsh::ohmyzsh (
     $plugin_names = keys($plugins)
     $plugins.each |$plugin_name, $plugin_details| {
       if $plugin_details['source'] {
-        platform::shells::zsh::plugin { "install-${plugin}-${user}":
+        platform::shells::zsh::plugin { "install-${plugin_name}-${user}":
           name     => $plugin_name,
           source   => $plugin_details['source'],
           location => "${home}/.oh-my-zsh/custom/plugins",
