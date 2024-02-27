@@ -5,13 +5,13 @@
 # @example
 #   platform::shells::zsh::plugin { 'namevar': }
 define platform::shells::zsh::plugin (
-  String $name,
+  String $plugin_name,
   String $source,
   String $location,
 ) {
-  exec { "clone-${name}-${location}":
-    command => "git clone --depth=1 ${source} ${location}/${name}",
-    unless  => "test -d ${location}/${name}",
+  exec { "clone-${plugin_name}-${location}":
+    command => "git clone --depth=1 ${source} ${location}/${plugin_name}",
+    unless  => "test -d ${location}/${plugin_name}",
     user    => $user,
     path    => ['/bin', '/usr/bin', '/usr/local/bin'],
   }
