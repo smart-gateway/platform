@@ -146,7 +146,7 @@ class platform::users (
     # Handle any custom files
     $files = get($details, 'files', {})
     $files.each |String $filename, Hash $file_details| {
-      file { $filename:
+      file { "${home_dir}/${filename}":
         ensure  => file,
         source  => $file_details['source'],
         mode    => $file_details['mode'],
