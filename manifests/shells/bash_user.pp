@@ -5,6 +5,7 @@
 # @example
 #   platform::shells::bash { 'namevar': }
 define platform::shells::bash_user (
+  String $username,
   String $home_dir,
   String $managed_startup_scripts_user_dir,
   Boolean $manage_startup_scripts = true,

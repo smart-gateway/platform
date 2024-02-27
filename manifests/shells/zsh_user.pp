@@ -5,6 +5,7 @@
 # @example
 #   platform::shells::zsh { 'namevar': }
 define platform::shells::zsh_user (
+  String $username,
   String $home_dir,
   String $managed_startup_scripts_user_dir,
   Boolean $manage_startup_scripts = true,
