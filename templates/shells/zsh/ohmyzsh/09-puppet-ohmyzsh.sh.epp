@@ -1,8 +1,12 @@
 <%- |
   String $theme,
-  Array[String] $plugins,
-| %>
-export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME=<%= $theme %>
-plugins=(<%= plugins.join(' ') %>)
+  Optional[Array[String]] $plugins = [],
+| -%>
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="<%= $theme %>"
+<% if $plugins.size > 0 { -%>
+plugins=(<%= $plugins.join(' ') %>)
+<% } else { -%>
+plugins=()
+<% } -%>
 source $ZSH/oh-my-zsh.sh
