@@ -51,7 +51,7 @@ define platform::shells::zsh_user (
 
     # Add line to their .zshrc
     exec { "add_init_to_${home_dir}/.zshrc":
-      command => "sed -i '1i[ -d \"\$HOME/.zshrc.managed.d\" ] && [ -f \"\$HOME/.zshrc.managed.d/.init.sh\" ] && source \"\$HOME/.zshrc.managed.d/.init.sh\"' ${home_dir}/.zshrc",
+      command => "sed -i '9i[ -d \"\$HOME/.zshrc.managed.d\" ] && [ -f \"\$HOME/.zshrc.managed.d/.init.sh\" ] && source \"\$HOME/.zshrc.managed.d/.init.sh\"' ${home_dir}/.zshrc",
       path    => ['/bin', '/usr/bin'],
       unless  => "grep -q 'source \"\$HOME/.zshrc.managed.d/.init.sh\"' ${home_dir}/.zshrc",
     }
