@@ -43,7 +43,7 @@ define platform::shells::zsh::ohmyzsh (
     # Ensure the oh-my-zsh settings are in the user-script-dir
     file { "${user_scripts_dir}/09-puppet-ohmyzsh.sh":
       ensure  => file,
-      content => epp('platform/shells/zsh/ohmyzsh/09-puppet-ohmyzsh.sh.epp', { 'theme' => $theme, 'plugins' => {} }),
+      content => epp('platform/shells/zsh/ohmyzsh/09-puppet-ohmyzsh.sh.epp', { 'theme' => $theme, 'plugins' => [] }),
     }
 
     # Ensure the antidote plugin manager script is in the user-script-dir
