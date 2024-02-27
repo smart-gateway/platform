@@ -21,7 +21,7 @@ define platform::shells::zsh::ohmyzsh (
   String $home,
   String $user_scripts_dir,
   String $theme = 'robbyrussell',
-  Optional[Array[String]] $plugins = ['git']
+  Optional[Hash] $plugins = { 'git' => {} }
 ) {
   if $ensure == 'present' {
     # Install oh-my-zsh
