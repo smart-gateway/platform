@@ -56,11 +56,11 @@ class platform::users (
 
     # Handle conversion of the shell value from Hiera into the actual shell
     $shell = $details['shell'] ? {
-      /^(sh|\/bin\/sh)$/       => '/bin/sh',
-      /^(zsh|\/bin\/zsh)$/     => '/bin/zsh',
-      /^(ksh|\/bin\/ksh)$/     => '/bin/ksh',
-      /^(bash|\/bin\/bash|)$/  => '/bin/bash',
-      default                  => fail("Unsupported shell: ${details['shell']}")
+      /^(sh|\/bin\/sh)$/      => '/bin/sh',
+      /^(zsh|\/bin\/zsh)$/    => '/bin/zsh',
+      /^(ksh|\/bin\/ksh)$/    => '/bin/ksh',
+      /^(bash|\/bin\/bash|)$/ => '/bin/bash',
+      default                 => fail("Unsupported shell: ${details['shell']}")
     }
 
     # Create user
@@ -143,27 +143,17 @@ class platform::users (
     # Ensure users sh customizations are executed
     # TODO
 
-    # # Setup any shell options
-    # $shell_opts.each | $option_key, $option_details | {
-    #   case $option_key {
-    #     'oh-my-zsh': {
-    #       platform::shells::zsh::ohmyzsh { $option_key:
-    #         user => $username,
-    #         home => $home_dir,
-    #         *    => $option_details,
-    #       }
-    #     }
-    #     'powerlevel10k': {
-    #       platform::shells::zsh::powerlevel10k { $option_key:
-    #         user => $username,
-    #         home => $home_dir,
-    #         *    => $option_details,
-    #       }
-    #     }
-    #     default: {
-    #       warning("Unsupported shell option '${option_key}'")
-    #     }
-    #   }
-    # }
+    # Handle any custom files
+    $files = get($details, 'files', {})
+    $files.each |String $filename, Hash $file_details| {
+      file { $filename:
+        ensure  => file,
+        source  => $file_details['source'],
+        mode    => $file_details['mode'],
+        user    => $username,
+        group   => $username,
+        replace => !$file_details['create_only'],
+      }
+    }
   }
 }
