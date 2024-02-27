@@ -1,0 +1,5 @@
+# .zsh_plugins.txt
+
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/zsh-autosuggestions
+ohmyzsh/ohmyzsh path:plugins/zsh-syntax-highlighting

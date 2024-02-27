@@ -32,25 +32,40 @@ define platform::shells::zsh::ohmyzsh (
       path    => ['/bin', '/usr/bin', '/usr/local/bin'],
     }
 
-    # # Ensure .zshrc exists - don't replace it if the contents just don't match
-    # file { "ensure_${home}_has_zshrc_template_for_ohmyzsh":
-    #   ensure  => file,
-    #   path    => "${home}/.zshrc",
-    #   owner   => $user,
-    #   group   => $user,
-    #   replace => false,
-    #   content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
-    #   require => Exec["install-oh-my-zsh-${user}"],
-    # }
+    # Exec resource to clone Antidote repository
+    exec { "clone-antidote-for-${user}":
+      command => "git clone --depth=1 https://github.com/mattmc3/antidote.git ${home}/.antidote",
+      creates => "${home}/.antidote",
+      user    => $user,
+      path    => ['/bin', '/usr/bin', '/usr/local/bin'],
+    }
 
     # Ensure the oh-my-zsh settings are in the user-script-dir
     file { "${user_scripts_dir}/09-puppet-ohmyzsh.sh":
       ensure  => file,
-      content => epp('platform/shells/zsh/ohmyzsh/09-puppet-ohmyzsh.sh.epp', { 'theme' => $theme, 'plugins' => $plugins }),
+      content => epp('platform/shells/zsh/ohmyzsh/09-puppet-ohmyzsh.sh.epp', { 'theme' => $theme, 'plugins' => {} }),
+    }
+
+    # Ensure the antidote plugin manager script is in the user-script-dir
+    file { "${user_scripts_dir}/09-puppet-antidote.sh":
+      ensure  => file,
+      content => epp('platform/shells/zsh/ohmyzsh/09-puppet-antidote.sh.epp'),
+    }
+
+    file { "${home}/.zsh_plugins.txt":
+      ensure  => file,
+      content => epp('platform/shells/zsh/ohmyzsh/.zsh_plugins.txt.epp', { 'plugins' => $plugins }),
     }
   } elsif $ensure == 'absent' {
     # Remove oh-my-zsh
     file { "${home}/.oh-my-zsh":
+      ensure  => absent,
+      force   => true,
+      recurse => true,
+    }
+
+    # Remove antidote
+    file { "${home}/.antidote":
       ensure  => absent,
       force   => true,
       recurse => true,
