@@ -17,6 +17,5 @@ class platform::config {
   # Install users from hiera
   class { 'platform::users':
     managed_startup_scripts_user_dir => $platform::managed_shell_startup_user_dir,
-    require                          => Package['zsh'],
   }
 }
