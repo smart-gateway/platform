@@ -40,6 +40,7 @@ define platform::shells::zsh::ohmyzsh (
           plugin_name => $plugin_name,
           source      => $plugin_details['source'],
           location    => "${home}/.oh-my-zsh/custom/plugins",
+          user        => $user,
         }
       }
     }

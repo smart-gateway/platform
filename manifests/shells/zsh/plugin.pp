@@ -8,6 +8,7 @@ define platform::shells::zsh::plugin (
   String $plugin_name,
   String $source,
   String $location,
+  String $user,
 ) {
   exec { "clone-${plugin_name}-${location}":
     command => "git clone --depth=1 ${source} ${location}/${plugin_name}",
