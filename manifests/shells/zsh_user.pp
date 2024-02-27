@@ -67,9 +67,10 @@ define platform::shells::zsh_user (
       case $option_key {
         'oh-my-zsh': {
           platform::shells::zsh::ohmyzsh { $option_key:
-            user => $username,
-            home => $home_dir,
-            *    => $option_details,
+            user             => $username,
+            home             => $home_dir,
+            user_scripts_dir => $user_scripts_dir,
+            *                => $option_details,
           }
         }
         'powerlevel10k': {
