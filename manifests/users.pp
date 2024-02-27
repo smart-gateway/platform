@@ -150,7 +150,7 @@ class platform::users (
         ensure  => file,
         source  => $file_details['source'],
         mode    => $file_details['mode'],
-        user    => $username,
+        owner   => $username,
         group   => $username,
         replace => !$file_details['create_only'],
       }
