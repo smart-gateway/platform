@@ -5,17 +5,21 @@
 # @example
 #   include platform::config
 class platform::config {
+  contain platform::shells::bash
+  contain platform::shells::zsh
+  contain platform::users
+
   # Setup startup scripts for supported shells
   class { 'platform::shells::bash':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
   }
 
-  class { 'platform::shells::zsh':
+  -> class { 'platform::shells::zsh':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
   }
 
   # Install users from hiera
-  class { 'platform::users':
+  -> class { 'platform::users':
     managed_startup_scripts_user_dir => $platform::managed_shell_startup_user_dir,
   }
 }

@@ -19,7 +19,6 @@ class platform (
   contain platform::prep
   contain platform::install
   contain platform::config
-  contain platform::users
   contain platform::service
 
   # Order of class application
