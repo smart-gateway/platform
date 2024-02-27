@@ -32,16 +32,16 @@ define platform::shells::zsh::ohmyzsh (
       path    => ['/bin', '/usr/bin', '/usr/local/bin'],
     }
 
-    # Ensure .zshrc exists - don't replace it if the contents just don't match
-    file { "ensure_${home}_has_zshrc_template_for_ohmyzsh":
-      ensure  => file,
-      path    => "${home}/.zshrc",
-      owner   => $user,
-      group   => $user,
-      replace => false,
-      content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
-      require => Exec["install-oh-my-zsh-${user}"],
-    }
+    # # Ensure .zshrc exists - don't replace it if the contents just don't match
+    # file { "ensure_${home}_has_zshrc_template_for_ohmyzsh":
+    #   ensure  => file,
+    #   path    => "${home}/.zshrc",
+    #   owner   => $user,
+    #   group   => $user,
+    #   replace => false,
+    #   content => template('platform/shells/zsh/ohmyzsh/zshrc.erb'),
+    #   require => Exec["install-oh-my-zsh-${user}"],
+    # }
 
     # Ensure the oh-my-zsh settings are in the user-script-dir
     file { "${user_scripts_dir}/09-puppet-ohmyzsh.sh":
