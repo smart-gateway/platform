@@ -26,7 +26,7 @@ define platform::shells::zsh::ohmyzsh (
   if $ensure == 'present' {
     # Install oh-my-zsh
     exec { "install-oh-my-zsh-${user}":
-      command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended\"",
+      command => "sh -c \"$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended --keep-zshrc\"",
       creates => "${home}/.oh-my-zsh",
       user    => $user,
       path    => ['/bin', '/usr/bin', '/usr/local/bin'],

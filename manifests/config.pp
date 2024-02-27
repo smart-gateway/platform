@@ -8,10 +8,12 @@ class platform::config {
   # Setup startup scripts for supported shells
   class { 'platform::shells::bash':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
+    require                            => Class['platform::install'],
   }
 
   -> class { 'platform::shells::zsh':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
+    require                            => Class['platform::install'],
   }
 
   # Install users from hiera
