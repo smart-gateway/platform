@@ -21,6 +21,7 @@ define platform::shells::zsh::powerlevel10k (
   Enum['present', 'absent', 'installed', 'latest', 'purged'] $ensure,
   String $user,
   String $home,
+  String $user_scripts_dir,
   Boolean $with_oh_my_zsh = false,
   Optional[String] $p10k_config = undef,
 ) {
@@ -40,22 +41,16 @@ define platform::shells::zsh::powerlevel10k (
 
     # Only add source line if not using with oh-my-zsh, as oh-my-zsh handles this
     if !$with_oh_my_zsh {
-      # Ensure .zshrc exists - don't replace it if the contents just don't match
-      file { "ensure_${home}_has_zshrc_template_for_powerlevel10k":
-        ensure  => file,
-        path    => "${home}/.zshrc",
-        owner   => $user,
-        group   => $user,
-        replace => false,
-        content => template('platform/shells/zsh/powerlevel10k/zshrc.erb'),
-        require => Exec["clone-powerlevel10k-${user}"],
-      }
-
       file_line { "source_powerlevel10k_${user}":
-        path    => "${home}/.zshrc",
-        line    => "source '${p10k_path}/powerlevel10k.zsh-theme'",
-        match   => "^source .*/powerlevel10k.zsh-theme\$",
-        require => File["${home}/.zshrc"],
+        path  => "${home}/.zshrc.managed.d/10-puppet-powerlevel10k.sh",
+        line  => "source '${p10k_path}/powerlevel10k.zsh-theme'",
+        match => "^source .*/powerlevel10k.zsh-theme\$",
+      }
+    } else {
+      # Create file for instantprompt
+      file { "${user_scripts_dir}/10-puppet-powerlevel10k.sh":
+        ensure  => file,
+        content => epp('platform/shells/zsh/powerlevel10k/10-puppet-powerlevel10k.sh.epp'),
       }
     }
 
@@ -69,55 +64,6 @@ define platform::shells::zsh::powerlevel10k (
         require => Exec["clone-powerlevel10k-${user}"],
       }
     }
-
-    # Make edits to .zshrc that are needed
-    file_line { 'p10k_instant_prompt_comment':
-      path  => "${home}/.zshrc",
-      line  => '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
-      match => '^# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.',
-    }
-
-    file_line { 'p10k_instant_prompt_comment2':
-      path  => "${home}/.zshrc",
-      line  => '# Initialization code that may require console input (password prompts, [y/n]',
-      match => '^# Initialization code that may require console input \(password prompts, \[y/n\]',
-    }
-
-    file_line { 'p10k_instant_prompt_comment3':
-      path  => "${home}/.zshrc",
-      line  => '# confirmations, etc.) must go above this block; everything else may go below.',
-      match => '^# confirmations, etc.\) must go above this block; everything else may go below.',
-    }
-
-    file_line { 'p10k_instant_prompt':
-      path  => "${home}/.zshrc",
-      line  => 'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
-      match => '^if \[\[ -r "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh" \]\]; then',
-    }
-
-    file_line { 'p10k_instant_prompt_source':
-      path  => "${home}/.zshrc",
-      line  => '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"',
-      match => '^  source "\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${\(%\):-%n}.zsh"',
-    }
-
-    file_line { 'p10k_instant_prompt_end':
-      path  => "${home}/.zshrc",
-      line  => 'fi',
-      match => '^fi',
-    }
-
-    file_line { 'p10k_configure_comment':
-      path  => "${home}/.zshrc",
-      line  => '# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
-      match => '^# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.',
-    }
-
-    file_line { 'p10k_source_config':
-      path  => "${home}/.zshrc",
-      line  => '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh',
-      match => '^\[\[ ! -f ~/.p10k.zsh \]\] \|\| source ~/.p10k.zsh',
-    }
   } elsif $ensure == 'absent' {
     # Remove the powerlevel10k directory
     file { $p10k_path:
@@ -130,22 +76,8 @@ define platform::shells::zsh::powerlevel10k (
       ensure => absent,
     }
 
-    augeas { 'remove-p10k-instant-prompt-from-zshrc':
-      context => '/files/home/ben/.zshrc',
-      lens    => 'Simplelines.lns',
-      incl    => '/home/ben/.zshrc',
-      changes => [
-        "rm *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then']",
-        "rm *[. =~ regexp('\\s*source \"\\\$\\{XDG_CACHE_HOME:-\\\$HOME/.cache}/p10k-instant-prompt-\\\$\\{(\\%):-%n}.zsh\"')]",
-        "rm *[.='fi']",
-        "rm *[. =~ regexp('.*Enable Powerlevel10k instant prompt.*')]",
-        "rm *[. =~ regexp('.*Initialization code that may require console input.*')]",
-        "rm *[. =~ regexp('.*must go above this block; everything else may go below.*')]",
-        "rm *[. =~ regexp('.*To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.*')]",
-        "rm *[. =~ regexp('.*\\[\\[ ! -f ~/.p10k.zsh \\]\\] \\|\\| source ~/.p10k.zsh.*')]",
-        "rm *[. =~ regexp('.*source \\'/home/ben/powerlevel10k/powerlevel10k.zsh-theme\\'.*')]",
-      ],
-      onlyif  => "match *[.='if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then'] size > 0",
+    file { "${user_scripts_dir}/10-puppet-powerlevel10k.sh":
+      ensure  => absent,
     }
 
     # # Remove lines from .zshrc if it exists

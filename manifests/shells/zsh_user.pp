@@ -60,5 +60,29 @@ define platform::shells::zsh_user (
       ensure  => file,
       content => epp('platform/shells/zsh/user/.init.sh.epp'),
     }
+
+    # Setup any shell options
+    $shell_opts.each | $option_key, $option_details | {
+      case $option_key {
+        'oh-my-zsh': {
+          platform::shells::zsh::ohmyzsh { $option_key:
+            user => $username,
+            home => $home_dir,
+            *    => $option_details,
+          }
+        }
+        'powerlevel10k': {
+          platform::shells::zsh::powerlevel10k { $option_key:
+            user             => $username,
+            home             => $home_dir,
+            user_scripts_dir => $user_scripts_dir,
+            *                => $option_details,
+          }
+        }
+        default: {
+          warning("Unsupported shell option '${option_key}'")
+        }
+      }
+    }
   }
 }
