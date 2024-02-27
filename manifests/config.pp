@@ -16,8 +16,13 @@ class platform::config {
     require                            => Class['platform::install'],
   }
 
+  # Setup access controls
+  -> class { 'platform::access::control':
+    require                            => Class['platform::install'],
+  }
+
   # Install users from hiera
-  -> class { 'platform::users':
+  -> class { 'platform::user::control':
     managed_startup_scripts_user_dir => $platform::managed_shell_startup_user_dir,
     require                          => Class['platform::install'],
   }
