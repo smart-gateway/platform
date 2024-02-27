@@ -62,7 +62,7 @@ define platform::shells::zsh_user (
     }
 
     # Setup any shell options
-    $shell_opts.each | $option_key, $option_details | {
+    $shell_options.each | $option_key, $option_details | {
       case $option_key {
         'oh-my-zsh': {
           platform::shells::zsh::ohmyzsh { $option_key:
