@@ -14,7 +14,7 @@ define platform::shells::bash_user (
   $home_directories = $facts['home_directories']
 
   # Setup startup scripts
-  if $manage_startup_scripts and $home_directories.include($home_dir.split('/')[-1]) {
+  if $manage_startup_scripts and $home_dir in $home_directories {
     $user_scripts_dir = sprintf("${home_dir}/${managed_startup_scripts_user_dir}", 'bash')
 
     # Ensure user directory exists

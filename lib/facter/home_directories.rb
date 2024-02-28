@@ -5,6 +5,6 @@ Facter.add(:home_directories) do
   setcode do
     Dir.entries('/home').select { |entry|
       File.directory?(File.join('/home', entry)) && !(entry == '.' || entry == '..')
-    }
+    }.map { |entry| "/home/#{entry}" }
   end
 end

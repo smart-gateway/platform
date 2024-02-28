@@ -29,7 +29,7 @@ define platform::shells::zsh_user (
   # Setup startup scripts
   $home_directories = $facts['home_directories']
 
-  if $manage_startup_scripts and $home_directories.include($home_dir.split('/')[-1]) {
+  if $manage_startup_scripts and $home_dir in $home_directories {
     $user_scripts_dir = sprintf("${home_dir}/${managed_startup_scripts_user_dir}", 'zsh')
 
     # Ensure user directory exists
