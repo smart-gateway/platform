@@ -17,7 +17,6 @@ class platform::config {
   }
 
   # Setup access controls
-  notify { "Domain: ${platform::domain}": }
   -> class { 'platform::access::control':
     require         => Class['platform::install'],
     domain_settings => $platform::domain,
