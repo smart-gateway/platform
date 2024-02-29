@@ -9,11 +9,11 @@ class platform::access::active_directory (
 ) {
   $ensure = get($domain_settings, 'ensure', undef)
   $controller = get($domain_settings, 'controller', '')
-  $mgmt_user = get($domain_settings, 'mgmt_user', '')
-  $mgmt_pass = get($domain_settings, 'mgmt_pass', '')
+  $mgmt_user = Sensitive(get($domain_settings, 'mgmt_user', ''))
+  $mgmt_pass = Sensitive(get($domain_settings, 'mgmt_pass', ''))
 
   if !$ensure == undef {
-    notify { "Domain Settings: ${domain_settings}": }
+    notify { "Ensure: ${ensure} | DC: ${controller} | User: ${mgmt_user} | Pass: ${mgmt_pass}": }
   }
 }
 # /etc/default/locale
