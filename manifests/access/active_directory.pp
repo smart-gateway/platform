@@ -12,9 +12,6 @@ class platform::access::active_directory (
   $mgmt_user = Sensitive(get($domain_settings, 'mgmt_user', ''))
   $mgmt_pass = Sensitive(get($domain_settings, 'mgmt_pass', ''))
   notify { "Ensure: ${ensure} | DC: ${controller} | User: ${mgmt_user} | Pass: ${mgmt_pass}": }
-  if !$ensure == undef {
-    notify { "Ensure: ${ensure} | DC: ${controller} | User: ${mgmt_user} | Pass: ${mgmt_pass}": }
-  }
 }
 # /etc/default/locale
 # /etc/environment
