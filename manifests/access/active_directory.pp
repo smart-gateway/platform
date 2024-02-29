@@ -4,7 +4,18 @@
 #
 # @example
 #   include platform::access::active_directory
-class platform::access::active_directory {
+class platform::access::active_directory (
+  Hash $domain_settings,
+) {
+  $ensure = get($domain_settings, 'ensure', undef)
+  $controller = get($domain_settings, 'controller', '')
+  $mgmt_user = get($domain_settings, 'mgmt_user', '')
+  $mgmt_pass = get($domain_settings, 'mgmt_pass', '')
+
+  if !$ensure == undef {
+    notify { "Domain Settings: ${domain_settings}": }
+  }
+}
 # /etc/default/locale
 # /etc/environment
 # /etc/group

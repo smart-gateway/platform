@@ -14,6 +14,7 @@ class platform (
   String $managed_shell_startup_global_dir = '/etc/%src.managed.d', # these strings have a format string in them so different shells can use them
   String $managed_shell_startup_user_dir = '.%src.managed.d', # these strings have a format string in them so different shells can use them
   Hash $users = {},
+  Hash $domain = {},
   Hash $packages = {},
 ) {
   contain platform::prep

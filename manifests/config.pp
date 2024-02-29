@@ -25,5 +25,6 @@ class platform::config {
   -> class { 'platform::user::control':
     managed_startup_scripts_user_dir => $platform::managed_shell_startup_user_dir,
     require                          => Class['platform::install'],
+    users                            => $platform::users,
   }
 }

@@ -7,21 +7,7 @@
 
 ## Functions
 
-## Facts
-
-The following custom facts are added by this module.
-
-#### home_directories
-```ruby
-Facter.add(:home_directories) do
-  # https://puppet.com/docs/puppet/latest/fact_overview.html
-  setcode do
-    Dir.entries('/home').select { |entry|
-      File.directory?(File.join('/home', entry)) && !(entry == '.' || entry == '..')
-    }
-  end
-end
-```
+This module handles the following tasks under the following categories.
 
 ### Users
 - Add/Remove local users
@@ -31,6 +17,29 @@ end
 - Control import of authorized keys from GitHub or Launchpad
 - Ensure creation of arbitrary user files based on source file (puppet, https)
 - Configure shell addons - oh-my-zsh, powerlevel10k, zsh plugins
+
+## Facts
+
+The following custom facts are added by this module.
+
+#### home_directories
+
+This fact creates an array which contains a list of all of the home directories currently on the system. This is used 
+to control setup of shell startup scripts only for users who have home directories on the system. The reason for this
+is to prevent the creation of folders for every domain user on every system.
+
+```ruby
+Facter.add(:home_directories) do
+  # https://puppet.com/docs/puppet/latest/fact_overview.html
+  setcode do
+    Dir.entries('/home').select { |entry|
+      File.directory?(File.join('/home', entry)) && !(entry == '.' || entry == '..')
+    }.map { |entry| "/home/#{entry}" }
+  end
+end
+```
+
+
 
 #### SSH Configuration
 

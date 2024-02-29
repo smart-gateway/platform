@@ -9,7 +9,7 @@ class platform::user::control (
   Boolean $manage_home_default = true,
   Hash $users = {},
 ) {
-  $platform::users.each | $username, $details | {
+  $users.each | $username, $details | {
     # Get the manage_home value from the user or use the default
     $manage_home = $details[managehome] == undef ? {
       true    => $manage_home_default,
