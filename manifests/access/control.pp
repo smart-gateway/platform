@@ -8,7 +8,7 @@ class platform::access::control (
   Optional[Hash] $domain_settings = {},
 ) {
   # Check if domain settings are passed
-  if !$domain_settings == undef and !empty($domain_settings) {
+  if !empty($domain_settings) {
     class { 'platform::access::active_directory':
       domain_settings => $domain_settings,
     }
