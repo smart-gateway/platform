@@ -74,7 +74,9 @@ define platform::packages::package (
 #     latest
 #     /./ (any specific version)
 class platform::packages {
-  if $platform::packages != undef {
-    create_resources(platform::packages::package, $platform::packages)
+  if $facts['kernel'] == 'Linux' {
+    if $platform::packages != undef {
+      create_resources(platform::packages::package, $platform::packages)
+    }
   }
 }
