@@ -5,18 +5,21 @@ define platform::utils::manage_file (
   String $mode = '0755',
   String $owner = 'root',
   String $group = 'root',
+  Boolean $linux_only = true,
 ) {
   $actual_state = $ensure ? {
-    Pattern[/^(yes|present|installed)$/ ] => 'file',
+    Pattern[/^(yes|present|installed)$/] => 'file',
     default                               => 'absent',
   }
 
-  file { $title:
-    ensure => $actual_state,
-    owner  => $owner,
-    group  => $group,
-    mode   => $mode,
-    source => $source,
-    path   => $path,
+  if !$linux_only or $facts['kernel'] == 'Linux' {
+    file { $title:
+      ensure => $actual_state,
+      owner  => $owner,
+      group  => $group,
+      mode   => $mode,
+      source => $source,
+      path   => $path,
+    }
   }
 }
