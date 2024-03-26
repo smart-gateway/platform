@@ -12,14 +12,12 @@ define platform::utils::manage_file (
     default                               => 'absent',
   }
 
-  if !$linux_only or $facts['kernel'] == 'Linux' {
-    file { $title:
-      ensure => $actual_state,
-      owner  => $owner,
-      group  => $group,
-      mode   => $mode,
-      source => $source,
-      path   => $path,
-    }
+  file { $title:
+    ensure => $actual_state,
+    owner  => $owner,
+    group  => $group,
+    mode   => $mode,
+    source => $source,
+    path   => $path,
   }
 }
