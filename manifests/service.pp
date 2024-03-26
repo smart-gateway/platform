@@ -5,10 +5,8 @@
 # @example
 #   include platform::service
 class platform::service {
-  if $facts['kernel'] == 'Linux' {
-    platform::utils::manage_service { 'puppet_agent_exporter':
-      ensure => $platform::ensure_puppet_exporter,
-      binary => $platform::puppet_exporter_binary_location,
-    }
+  platform::utils::manage_service { 'puppet_agent_exporter':
+    ensure => $platform::ensure_puppet_exporter,
+    binary => $platform::puppet_exporter_binary_location,
   }
 }
