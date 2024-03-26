@@ -126,7 +126,74 @@ block: >
 
 ## Control Repo Changes
 
-1. The following files need to be updated to support Windows in addition to Linux.
+1. All files that use the `/tmp/puppet-agent/...` for recording applied profiles and roles need to switch to using the `platform::utils::mark_applied` defined type
+2. `site.pp` needs to be updated to the below contents to support Windows and Linux
+
+```puppet
+# OS specific variables  
+$managed_file_path = $facts['os']['family'] ? {  
+  'windows' => 'C:/managed_by_puppet.txt',  
+  default   => '/managed_by_puppet.txt'  
+}  
   
-  - `site-modules/profile/manifests/base.pp`
-  - every profile/role which writes a file
+$owner = $facts['os']['family'] ? {  
+  'windows' => 'Administrator',  
+  default   => 'root'  
+}  
+  
+$group = $facts['os']['family'] ? {  
+  'windows' => 'None',  
+  default   => 'root'  
+}  
+  
+$base_path = $facts['os']['family'] ? {  
+  'windows' => 'C:/puppet-agent/',  
+  default   => '/tmp/puppet-agent/'  
+}  
+  
+# Notice file  
+file { $managed_file_path:  
+  ensure  => file,  
+  mode    => '0444',  
+  owner   => $owner,  
+  group   => $group,  
+  content => '[NOTICE] This system is under managent by Puppet.',  
+}  
+  
+# Base directory  
+file { $base_path:  
+  ensure => directory,  
+  mode   => '0755',  
+  owner  => $owner,  
+  group  => $group,  
+}  
+  
+# Applied directory  
+file { "${base_path}applied":  
+  ensure => directory,  
+  mode   => '0755',  
+  owner  => $owner,  
+  group  => $group,  
+}  
+  
+# README file  
+file { "${base_path}applied/README.txt":  
+  ensure  => file,  
+  mode    => '0444',  
+  owner   => $owner,  
+  group   => $group,  
+  content => '[NOTICE] The profiles listed here are only valid after a fresh reboot and Puppet run, otherwise there may be stale values here',  
+}  
+```
+
+3. Remove `facts.txt` file from `base.pp` as it shouldn't be needed with users able to run facter instead to see facts
+
+```puppet
+  file { '/tmp/puppet-agent/facts.txt':
+    ensure  => file,
+    mode    => '0444',
+    owner   => 'root',
+    group   => 'root',
+    content => "cluster: ${cluster}\nproject: ${project}\n",
+  }
+```
