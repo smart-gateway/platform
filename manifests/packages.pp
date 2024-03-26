@@ -29,15 +29,17 @@ define platform::packages::package (
   Enum['present', 'absent', 'installed', 'latest', 'held', 'purged'] $ensure,
   Optional[String] $package_name = $title
 ) {
-  # Check if a Package resource with this title or name already exists
-  if ! defined(Package[$title]) and ! defined(Package[$package_name]) {
-    package { $title:
-      ensure => $ensure,
-      name   => $package_name,
-    }
-  } else {
-    notify { "Package ${title} is already declared in the catalog; Skipping declaration in platform::packages::package":
-      loglevel => 'debug',
+  if $facts['kernel'] == 'Linux' {
+    # Check if a Package resource with this title or name already exists
+    if ! defined(Package[$title]) and ! defined(Package[$package_name]) {
+      package { $title:
+        ensure => $ensure,
+        name   => $package_name,
+      }
+    } else {
+      notify { "Package ${title} is already declared in the catalog; Skipping declaration in platform::packages::package":
+        loglevel => 'debug',
+      }
     }
   }
 }
@@ -74,9 +76,7 @@ define platform::packages::package (
 #     latest
 #     /./ (any specific version)
 class platform::packages {
-  if $facts['kernel'] == 'Linux' {
-    if $platform::packages != undef {
-      create_resources(platform::packages::package, $platform::packages)
-    }
+  if $platform::packages != undef {
+    create_resources(platform::packages::package, $platform::packages)
   }
 }
