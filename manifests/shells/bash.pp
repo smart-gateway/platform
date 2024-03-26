@@ -9,7 +9,7 @@ class platform::shells::bash (
   String $system_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin',
   Boolean $manage_startup_scripts = true,
 ) {
-  if $fats['kernel'] == 'Linux' {
+  if $facts['kernel'] == 'Linux' {
     if $manage_startup_scripts {
       $global_scripts_dir = sprintf($managed_startup_scripts_global_dir, 'bash')
 
