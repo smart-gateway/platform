@@ -123,3 +123,10 @@ block: >
   nfGwfJBz+oyYrsoDA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBAnm5XMrf
   0Jf7e4/RKNhggMgBBA1ey5YZKzdFegksw+EMjR]
 ```
+
+## Control Repo Changes
+
+1. The following files need to be updated to support Windows in addition to Linux.
+  
+  - `site-modules/profile/manifests/base.pp`
+  - every profile/role which writes a file
