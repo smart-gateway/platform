@@ -16,10 +16,15 @@ class platform::config {
     require                            => Class['platform::install'],
   }
 
-  # Setup access controls
-  -> class { 'platform::access::control':
+  # Setup domain controls
+  -> class { 'platform::domain::control':
     require         => Class['platform::install'],
     domain_settings => $platform::domain,
+  }
+
+  # Setup access controls
+  -> class { 'platform::access::control':
+
   }
 
   # Install users from hiera

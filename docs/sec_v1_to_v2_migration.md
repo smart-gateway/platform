@@ -1,6 +1,26 @@
 # Migration
 
+## New Packages
+
+
 ## Hiera Changes
+
+#### Changes to common.yaml
+
+Add the following packages to support domain joining functionality built into the platform module.
+
+```yaml
+  sssd-ad:
+    ensure: installed
+  sssd-tools:
+    ensure: installed
+  realmd:
+    ensure: installed
+  adcli:
+    ensure: installed
+  libsss-sudo:
+    ensure: installed
+```
 
 #### Changes to hiera.yaml
 
@@ -102,5 +122,4 @@ block: >
   fkwLhc/wmnlBG5V5x13rvPBzOSzUQRSP8DyGZiFxhQT0z1+lx/mO2CkePYEl
   nfGwfJBz+oyYrsoDA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBAnm5XMrf
   0Jf7e4/RKNhggMgBBA1ey5YZKzdFegksw+EMjR]
-
 ```

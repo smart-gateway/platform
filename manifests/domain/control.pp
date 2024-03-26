@@ -5,13 +5,26 @@
 # @example
 #   include platform::domain::control
 class platform::domain::control (
-  Enum['yes', 'present', 'joined', 'no', 'absent', 'left'] $ensure = 'joined',
-  String $join_user,
-  String $join_pass,
-  String $computer_name,
-  Optional[String] $domain_controller = 'dc01.jointpathfinding.com',
+  Hash $domain_settings,
 ) {
   # pp_cluster: cluster name
   # pp_instance_id: project id number
   # pp_project: project name
+
+  $ensure = get($domain_settings, 'ensure', undef)
+  $controller = get($domain_settings, 'controller', '')
+  $mgmt_user = Sensitive(get($domain_settings, 'mgmt_user', ''))
+  $mgmt_pass = Sensitive(get($domain_settings, 'mgmt_pass', ''))
+
+  case $ensure {
+    'joined', 'installed', 'present': {
+      # Do something
+    }
+    'left', 'unjoined', 'absent': {
+      # Do something else
+    }
+    default: {
+      warning("Invalid value for \$ensure: ${ensure}")
+    }
+  }
 }
