@@ -197,3 +197,9 @@ file { "${base_path}applied/README.txt":
     content => "cluster: ${cluster}\nproject: ${project}\n",
   }
 ```
+
+4. New `role::domain_controller` which is applied to the DC(s) to help them manage the users/configuration of the domain
+
+```puppet
+
+```
