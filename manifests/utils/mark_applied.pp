@@ -8,7 +8,7 @@ define platform::utils::mark_applied (
   String $class_name = $title
 ) {
   $filename = $facts['os']['family'] ? {
-    'windows' => "C:/Temp/puppet-agent/applied/${class_name}",
+    'windows' => "C:\\Program Files\\Puppet Labs\\Puppet\\${class_name}",
     default   => "/tmp/puppet-agent/applied/${class_name}"
   }
 
