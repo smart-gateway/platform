@@ -13,41 +13,38 @@ class platform::domain::control (
   # Ensure that this system is a domain controller
   if $facts['is_domain_controller'] {
     # Ensure the OUs for the users and groups is created
-    $ou_components = $users_ou.split(/,OU=/).reverse
-    Notify { "users_ou: ${users_ou}": }
-    Notify { "groups_ou: ${groups_ou}": }
-    Notify { "ou_components: ${ou_components}": }
-    $current_path = $domain_dn
+    $ou_list = platform::parse_ou_path($users_ou)
 
-    $ou_components.each | $index, $ou | {
-      $full_dn = "OU=${ou},${current_path}"
-      Notify { "${index} | full_dn: ${full_dn}": }
-      Notify { "${index} | current_path: ${current_path}": }
-      Notify { "${index} | ou: ${ou}": }
+    $ou_list.each | $ou | {
+      $full_path = "${ou['path']},${domain_dn}".trim(',')
 
-      dsc_adorganizationalunit { "ensure ${full_dn} is created":
+      dsc_adorganizationalunit { "ensure ${ou['name']},${full_path} is created":
         dsc_ensure => 'present',
-        dsc_name   => $ou,
-        dsc_path   => $current_path,
+        dsc_name   => $ou['name'],
+        dsc_path   => $full_path,
       }
-
-      $current_path = $full_dn
     }
 
-    # # Ensure the
-    # dsc_adorganizationalunit { 'ensure_groups_ou':
-    #   dsc_ensure => 'present',
-    #   dsc_name   => $group_name,
-    #   dsc_path   => $domain_dn,
+    # $normalized_users_ou = $users_ou.replace(/^OU=/, ',OU=')
+    # $ou_components = $normalized_users_ou.split(/,OU=/)
+    # $reversed_ou_components = $ou_components.reverse
+    # Notify { "users_ou: ${users_ou}": }
+    # Notify { "groups_ou: ${groups_ou}": }
+    # Notify { "reversed_ou_components: ${reversed_ou_components}": }
+    # $current_path = $domain_dn
+    #
+    # $ou_components.each | $index, $ou | {
+    #   $full_dn = "OU=${ou},${current_path}"
+    #   Notify { "${index} | full_dn: ${full_dn}": }
+    #   Notify { "${index} | current_path: ${current_path}": }
+    #   Notify { "${index} | ou: ${ou}": }
+    #
+    #   dsc_adorganizationalunit { "ensure ${full_dn} is created":
+    #     dsc_ensure => 'present',
+    #     dsc_name   => $ou,
+    #     dsc_path   => $current_path,
+    #   }
+    #
+    #   $current_path = $full_dn
     # }
-  }
-
-  #         ADOrganizationalUnit 'ExampleOU'
-  #       {
-  #           Name                            = $Name
-  #           Path                            = $Path
-  #           ProtectedFromAccidentalDeletion = $ProtectedFromAccidentalDeletion
-  #           Description                     = $Description
-  #           Ensure                          = 'Present'
-  #       }
 }
