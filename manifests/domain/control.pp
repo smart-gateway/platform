@@ -14,10 +14,14 @@ class platform::domain::control (
   if $facts['is_domain_controller'] {
     # Ensure the OUs for the users and groups is created
     $ou_components = $users_ou.split(/,OU=/).reverse
+    debug("ou_components: ${ou_components}")
     $current_path = $domain_dn
 
     $ou_components.each | $ou | {
       $full_dn = "OU=${ou},${current_path}"
+      debug("full_dn: ${full_dn}")
+      debug("current_path: ${current_path}")
+      debug("ou: ${ou}")
 
       dsc_adorganizationalunit { "ensure ${full_dn} is created":
         dsc_ensure => 'present',
