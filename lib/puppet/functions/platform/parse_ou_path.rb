@@ -5,17 +5,29 @@ Puppet::Functions.create_function(:'platform::parse_ou_path') do
   end
 
   def parse_ou_path(ou_string)
-    # Split the OU string into components and reverse to start from the top-level OU
-    components = ou_string.split(/,OU=/).reverse
-    path_accumulator = []
+    # Initial split on ',OU=' might not catch the first OU if there's no leading comma.
+    # Split on 'OU=' and then handle the removal of empty or undesired elements.
+    components = ou_string.split(/OU=/).reject(&:empty?)
 
-    components.reduce('') do |acc, component|
-      # Construct the DN for the current component
-      current_dn = "OU=#{component},#{acc}".chomp(',')
-      # Append the current component and path to the accumulator
-      path_accumulator << { 'name' => component, 'path' => acc }
-      # Update the accumulator with the current DN
-      current_dn
+    path_accumulator = []
+    current_path = ''
+
+    components.each do |component|
+      # For each component, strip leading and trailing whitespace, just in case.
+      sanitized_component = component.strip
+
+      # The DN for the current OU component
+      current_dn = if current_path.empty?
+                     "OU=#{sanitized_component}"
+                   else
+                     "OU=#{sanitized_component},#{current_path}"
+                   end
+
+      # Append info to the accumulator unless it's the last element, which represents the base DN rather than an OU
+      path_accumulator << { 'name' => sanitized_component, 'path' => current_path } unless sanitized_component == components.last
+
+      # Update current_path for the next iteration
+      current_path = current_dn
     end
 
     path_accumulator
