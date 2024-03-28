@@ -13,15 +13,23 @@ class platform::domain::control (
   # Ensure that this system is a domain controller
   if $facts['is_domain_controller'] {
     # Ensure the OUs for the users and groups is created
-    $ou_list = platform::parse_ou_path($users_ou)
+    $ous = {
+      'users' => $users_ou,
+      'groups' => $groups_ou,
+      'suoders' => $sudoers_ou,
+    }
 
-    $ou_list.each | $ou | {
-      $full_path = regsubst("${ou['path']},${domain_dn}", '^\s*,\s*', '')
+    $ous.each | $name, $ou_dn | {
+      $ou_list = platform::parse_ou_path($ou_dn)
 
-      dsc_adorganizationalunit { "ensure ${ou['name']},${full_path} is created":
-        dsc_ensure => 'present',
-        dsc_name   => $ou['name'],
-        dsc_path   => $full_path,
+      $ou_list.each | $ou | {
+        $full_path = regsubst("${ou['path']},${domain_dn}", '^\s*,\s*', '')
+
+        dsc_adorganizationalunit { "ensure ${name} ou: ${ou['name']},${full_path} is created":
+          dsc_ensure => 'present',
+          dsc_name   => $ou['name'],
+          dsc_path   => $full_path,
+        }
       }
     }
   }
