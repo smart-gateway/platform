@@ -16,7 +16,7 @@ class platform::domain::control (
     $ou_list = platform::parse_ou_path($users_ou)
 
     $ou_list.each | $ou | {
-      $full_path = "${ou['path']},${domain_dn}".trim(',')
+      $full_path = regsubst("${ou['path']},${domain_dn}", '^\s*,\s*', '')
 
       dsc_adorganizationalunit { "ensure ${ou['name']},${full_path} is created":
         dsc_ensure => 'present',
