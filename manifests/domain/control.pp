@@ -54,7 +54,7 @@ class platform::domain::control (
       }
 
       if $type == 'domain' {
-        $user_pass = platform::decrypt_password($private_key_b64, $details['password'])
+        $user_pass = Sensitive(platform::decrypt_password($private_key_b64, $details['password']))
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure       => $details['ensure'],
           dsc_username     => $username,
@@ -68,7 +68,7 @@ class platform::domain::control (
           dsc_path         => $users_path,
           dsc_password     => {
             user     => $username,
-            password => Sensitive[$user_pass],
+            password => $user_pass,
           },
         }
       }
