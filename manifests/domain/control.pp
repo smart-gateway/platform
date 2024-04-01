@@ -61,7 +61,7 @@ class platform::domain::control (
           dsc_userprincipalname => "${username}@${domain}",
           dsc_domainname        => $domain,
           dsc_givenname         => $details['firstname'],
-          dsc_surname           => $details['surname'],
+          dsc_surname           => $details['lastname'],
           dsc_company           => $details['company'],
           dsc_description       => $details['comment'],
           dsc_displayname       => "${details['lastname']}, ${details['firstname']}",
