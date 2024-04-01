@@ -91,9 +91,9 @@ class platform::domain::control (
       }
       Notify { "${project_name} custom groups: ${custom_groups}": }
 
-      $groups_to_create = merge($standard_groups, $custom_groups)
-
-      Notify { "Groups to create: ${groups_to_create}": }
+      # $groups_to_create = merge($standard_groups, $custom_groups)
+      #
+      # Notify { "Groups to create: ${groups_to_create}": }
     }
     # Handle creation of all sudoers groups for each project and setting of the attributes
 
