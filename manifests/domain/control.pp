@@ -75,7 +75,7 @@ class platform::domain::control (
     }
 
     # Handle creation of all projects
-    $ous.each | $project_name, $project_details | {
+    $projects.each | $project_name, $project_details | {
       $project_id = sprintf('%03d', $project_details['id'])
 
       $standard_groups = {
