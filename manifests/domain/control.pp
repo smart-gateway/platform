@@ -45,6 +45,7 @@ class platform::domain::control (
 
     # Handle creation of all users that are of type=domain
     $users_path = "${users_ou},${domain_dn}"
+    $domain = platform::dn_to_domain($domain_dn)
     $users.each | $username, $details | {
       $type = $details['type'] ? {
         'domain' => 'domain',
@@ -55,6 +56,7 @@ class platform::domain::control (
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure       => $details['ensure'],
           dsc_username     => $username,
+          dsc_domainname   => $domain,
           dsc_givenname    => $details['firstname'],
           dsc_surname      => $details['surname'],
           dsc_company      => $details['company'],
