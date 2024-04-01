@@ -54,6 +54,7 @@ class platform::domain::control (
       if $type == 'domain' {
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure       => $details['ensure'],
+          dsc_username     => $username,
           dsc_givenname    => $details['firstname'],
           dsc_surname      => $details['surname'],
           dsc_company      => $details['company'],
