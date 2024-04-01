@@ -13,12 +13,12 @@ class platform::domain::control (
 ) {
   # Ensure that this system is a domain controller
   if $facts['is_domain_controller'] {
-    # Ensure long paths are enabled
-    registry::value { 'LongPathsEnabled':
-      key  => 'HKLM\SYSTEM\CurrentControlSet\Control\FileSystem',
-      type => dword,
-      data => '1',
-    }
+    # # Ensure long paths are enabled
+    # registry::value { 'LongPathsEnabled':
+    #   key  => 'HKLM\SYSTEM\CurrentControlSet\Control\FileSystem',
+    #   type => dword,
+    #   data => '1',
+    # }
 
     # Ensure the OUs for the users and groups is created
     $ous = {
