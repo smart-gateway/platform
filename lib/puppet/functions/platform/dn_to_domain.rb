@@ -1,4 +1,4 @@
-Puppet::Functions.create_function(:'module_name::dn_to_domain') do
+Puppet::Functions.create_function(:'platform::dn_to_domain') do
   dispatch :convert do
     param 'String', :dn
     return_type 'String'
