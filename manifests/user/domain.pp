@@ -5,6 +5,10 @@
 # @example
 #   platform::user::domain { 'namevar': }
 define platform::user::domain (
+  String $username,
+  Hash $details,
+  Boolean $manage_home,
+  String $managed_startup_scripts_user_dir,
 ) {
   # Run initialization for each shell so that the user can move back and forth with consistency
   # Ensure users bash customizations are executed

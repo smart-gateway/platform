@@ -25,6 +25,12 @@ Add the following packages to support domain joining functionality built into th
 #### Changes to hiera.yaml
 
 ```yaml
+# Add new project data folder to data/projects then add the following entry to hiera.yaml
+# --------------------------------------------------------------------------------
+# Data for projects
+- name: "Project Data"
+  glob: "projects/*.yaml"
+  
 # Add new user data folder to data/users then add the following entry to hiera.yaml
 # ---------------------------------------------------------------------------------
 # Data for users
@@ -202,4 +208,59 @@ file { "${base_path}applied/README.txt":
 
 ```puppet
 
+```
+
+
+## Setting up user provided encrypted passwords
+
+1. Generate the `public/private keypair` on a Linux system
+
+```bash
+openssl genpkey -algorithm RSA -out domain_users_private.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in domain_users_private.pem -out domain_users_public.pem
+```
+
+2. Add to encrypted hiera
+
+```bash
+cat domain_users_public.pem | base64 -w 0
+# copy output to secrets/common.eyaml under pub_cred_key_b64:
+cat domain_users_private.pem| base64 -w 0
+sudo /opt/puppetlabs/puppet/bin/eyaml encrypt --pkcs7-public-key=/etc/puppetlabs/puppet/eyaml/public_key.pkcs7.pem -s '<paste b64 private key'
+# copy output to secrets/common.eyaml under pri_cred_key_b64:
+```
+
+3. Have users encrypt their passwords
+
+```powershell
+# Assuming $base64PublicKey contains your Base64-encoded public key
+$base64PublicKey = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFyLzVaL0lnVnNLYlZKK0lXdEhVeApRRUFmUlBkTk9yQzBPMU9ibXkzUDJRdFAxSWhXZ1VwYWxSa1VvaENXQlpGUkFHeXhRa1VuNlhHU0tTSThDOGhiCmJERk5YcGhQWDQvamcwVVBBOUIxckdPVnlyaGYweUZ5N0UyQmR3Q3dvakpiMWtKYTVvRkQwS2hmdXkrbmlGZlUKRE5ESTMrWTJPaGh2MVk0TWRLNG93aGFBRFZYWU1MWXR6L0RzbVdTNjVuNnBDcllxVDlHeXdxeEtncDJkcUw3dQpIOEZuTnpJTTk0RTRWZFZwbEgyNXczM3Zjd0k0Z1V5ODFkREVTbzNvWWR0Z0xLVnpXVjU4L0NLRDliS1U5Tkk3CjhJdmUrcTVyWFEwRUxrQzZXeDNKWjZkMXc0MnhXWWNSNG1FbmUycVRoZnhsejQxVnZhNCt2elR2bHlMOFdoVGsKM3dJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+
+# Convert Base64 string to byte array
+$keyBytes = [System.Convert]::FromBase64String($base64PublicKey)
+
+# Use the RSA class, which supports ImportSubjectPublicKeyInfo
+$rsa = [System.Security.Cryptography.RSA]::Create()
+
+try {
+    # .NET Core and newer versions of .NET Framework support this method
+    $rsa.ImportSubjectPublicKeyInfo($keyBytes, [ref]$null)
+
+    # Your encryption logic here
+    $passwordToEncrypt = "S3cr3tP@ssw0rd"
+    $bytesToEncrypt = [System.Text.Encoding]::UTF8.GetBytes($passwordToEncrypt)
+    $encryptedBytes = $rsa.Encrypt($bytesToEncrypt, [System.Security.Cryptography.RSAEncryptionPadding]::OaepSHA1)
+    $encryptedPasswordBase64 = [Convert]::ToBase64String($encryptedBytes)
+    Write-Output "Encrypted Password: $encryptedPasswordBase64"
+}
+finally {
+    # Cleanup
+    $rsa.Dispose()
+}
+```
+
+or using Bash
+
+```bash
+echo -n "S3cr3tP@ssw0rd" | openssl rsautl -encrypt -pubin -inkey domain_users_public.pem | openssl base64 -A > encrypted_password.txt
 ```

@@ -8,6 +8,7 @@ class platform::user::control (
   String $managed_startup_scripts_user_dir,
   Boolean $manage_home_default = true,
   Hash $users = {},
+  Hash $domain = {},
 ) {
   $users.each | $username, $details | {
     # Get the manage_home value from the user or use the default
