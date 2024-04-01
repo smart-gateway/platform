@@ -10,6 +10,7 @@ class platform::domain::control (
   String $groups_ou = 'OU=Groups,OU=Research',
   String $sudoers_ou = 'OU=sudoers',
   Hash $users = {},
+  String $private_key_b64 = '',
 ) {
   # Ensure that this system is a domain controller
   if $facts['is_domain_controller'] {
@@ -53,6 +54,7 @@ class platform::domain::control (
       }
 
       if $type == 'domain' {
+        $user_pass = platform::decrypt_password($private_key_b64, $details['password'])
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure       => $details['ensure'],
           dsc_username     => $username,
@@ -64,6 +66,7 @@ class platform::domain::control (
           dsc_displayname  => "${details['lastname']}, ${details['firstname']}",
           dsc_emailaddress => $details['email'],
           dsc_path         => $users_path,
+          dsc_password     => $user_pass,
         }
       }
     }
