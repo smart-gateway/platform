@@ -66,7 +66,10 @@ class platform::domain::control (
           dsc_displayname  => "${details['lastname']}, ${details['firstname']}",
           dsc_emailaddress => $details['email'],
           dsc_path         => $users_path,
-          dsc_password     => $user_pass,
+          dsc_password     => {
+            user     => $username,
+            password => Sensitive[$user_pass],
+          },
         }
       }
     }
