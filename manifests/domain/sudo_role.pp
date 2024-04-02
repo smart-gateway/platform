@@ -6,24 +6,24 @@
 #   platform::domain::sudo_role { 'namevar': }
 define platform::domain::sudo_role (
   Enum['present', 'absent'] $ensure,
-  String[1] $name,
+  String[1] $role_name,
   String[1] $path,
   String[1] $sudo_host,
   String[1] $sudo_user,
   String[1] $sudo_command = 'ALL',
 ) {
   if $ensure == 'present' {
-    exec { "create-${name}":
-      command   => "New-ADObject -Name '${name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
+    exec { "create-${role_name}":
+      command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
-      unless    => "Get-ADObject -Filter 'Name -eq \"${name}\"' -SearchBase '${path}'",
+      unless    => "Get-ADObject -Filter 'Name -eq \"${role_name}\"' -SearchBase '${path}'",
       logoutput => true,
     }
   } elsif $ensure == 'absent' {
-    exec { "remove-${name}":
-      command   => "Remove-ADObject -Identity '${name}' -Confirm:\$false",
+    exec { "remove-${role_name}":
+      command   => "Remove-ADObject -Identity '${role_name}' -Confirm:\$false",
       provider  => powershell,
-      onlyif    => "Get-ADObject -Filter 'Name -eq \"${name}\"' -SearchBase '${path}'",
+      onlyif    => "Get-ADObject -Filter 'Name -eq \"${role_name}\"' -SearchBase '${path}'",
       logoutput => true,
     }
   }
