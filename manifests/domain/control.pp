@@ -90,10 +90,17 @@ class platform::domain::control (
       }
 
       $groups_to_create = merge($standard_groups, $custom_groups)
+      $groups_path = "${groups_ou},${domain_dn}"
 
-      Notify { "Groups: ${groups_to_create}": }
-
-      $groups_to_create.each | $group_key, $group_name | {
+      $groups_to_create.each | $group_name, $group_members | {
+        dsc_adgroup { "ensure ${project_name} group ${group_name} exists":
+          dsc_ensure           => 'present',
+          dsc_groupname        => $group_name,
+          dsc_groupscope       => 'global',
+          dsc_category         => 'security',
+          dsc_path             => $groups_path,
+          dsc_memberstoinclude => $group_members,
+        }
       }
     }
     # Handle creation of all sudoers groups for each project and setting of the attributes
