@@ -82,18 +82,16 @@ class platform::domain::control (
         'admin' => "Admins-${project_id}",
         'users' => "Users-${project_id}",
       }
-      Notify { "${project_name} standard groups: ${standard_groups}": }
 
       $has_custom_groups = $project_details['access'] and $project_details['access']['custom']
       $custom_groups = $has_custom_groups ? {
         true  => platform::process_custom_groups($project_details['access']['custom']),
         false => {},
       }
-      Notify { "${project_name} custom groups: ${custom_groups}": }
 
-      # $groups_to_create = merge($standard_groups, $custom_groups)
-      #
-      # Notify { "Groups to create: ${groups_to_create}": }
+      $groups_to_create = merge($standard_groups, $custom_groups)
+
+      Notify { "Groups to create: ${groups_to_create}": }
     }
     # Handle creation of all sudoers groups for each project and setting of the attributes
 
