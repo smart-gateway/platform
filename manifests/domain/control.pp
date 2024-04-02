@@ -95,6 +95,7 @@ class platform::domain::control (
       $groups_path = "${groups_ou},${domain_dn}"
 
       $groups_to_create.each | $group_name, $group_members | {
+        # Create the active directory group
         dsc_adgroup { "ensure ${project_name} group ${group_name} exists":
           dsc_ensure           => 'present',
           dsc_groupname        => $group_name,
@@ -102,6 +103,29 @@ class platform::domain::control (
           dsc_category         => 'security',
           dsc_path             => $groups_path,
           dsc_memberstoinclude => $group_members,
+        }
+      }
+
+      # Create standard sudo control objects
+      $sudoers_path = "${sudoers_ou},${domain_dn}"
+      platform::domain::sudo_role { "ensure ${project_name} standard sudo role":
+        name         => "Admins-${project_id}",
+        path         => $sudoers_path,
+        sudo_host    => "*.${project_name}.${domain}",
+        sudo_user    => "%Admins-${project_id}",
+        sudo_command => 'ALL',
+      }
+
+      $custom_admin_groups = $custom_groups.filter | $key | { $key =~ /^Admin/ }
+      $custom_admin_groups.each | $admin_group | {
+        $host_portion = split($admin_group, 'Admins-')[1]
+        $host = downcase($host_portion)
+        platform::user::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
+          name         => $admin_group,
+          path         => $sudoers_path,
+          sudo_host    => "${host}.${project_name}.${domain}",
+          sudo_user    => "%${admin_group}",
+          sudo_command => 'ALL',
         }
       }
     }
