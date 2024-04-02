@@ -121,7 +121,8 @@ class platform::domain::control (
         $host_portion = split($admin_group, 'Admins-')[1]
         $host = downcase($host_portion)
         platform::user::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
-          name         => $admin_group,
+          ensure       => 'present',
+          role_name    => $admin_group,
           path         => $sudoers_path,
           sudo_host    => "${host}.${project_name}.${domain}",
           sudo_user    => "%${admin_group}",
