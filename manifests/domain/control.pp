@@ -109,7 +109,8 @@ class platform::domain::control (
       # Create standard sudo control objects
       $sudoers_path = "${sudoers_ou},${domain_dn}"
       platform::domain::sudo_role { "ensure ${project_name} standard sudo role":
-        name         => "Admins-${project_id}",
+        ensure       => 'present',
+        role_name    => "Admins-${project_id}",
         path         => $sudoers_path,
         sudo_host    => "*.${project_name}.${domain}",
         sudo_user    => "%Admins-${project_id}",
@@ -130,10 +131,5 @@ class platform::domain::control (
         }
       }
     }
-    # Handle creation of all sudoers groups for each project and setting of the attributes
-
-    # Handle adding users to the proper groups
-
-    # Handle nesting of groups
   }
 }
