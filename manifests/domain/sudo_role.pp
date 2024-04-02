@@ -13,6 +13,7 @@ define platform::domain::sudo_role (
   String[1] $sudo_command = 'ALL',
 ) {
   if $ensure == 'present' {
+    Notify { "creating sudo role ${role_name}": }
     exec { "create-${role_name}":
       command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
