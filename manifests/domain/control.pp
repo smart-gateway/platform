@@ -116,7 +116,7 @@ class platform::domain::control (
         sudo_command => 'ALL',
       }
 
-      $custom_admin_groups = $custom_groups.filter | String $element | { $element =~ /^Admin-/ }
+      $custom_admin_groups = $custom_groups.keys.filter |String $key| { $key =~ /^Admin-/ }
       $custom_admin_groups.each | $admin_group | {
         $host_portion = split($admin_group, 'Admins-')[1]
         $host = downcase($host_portion)
