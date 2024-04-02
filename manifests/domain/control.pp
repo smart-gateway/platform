@@ -95,14 +95,13 @@ class platform::domain::control (
       $groups_path = "${groups_ou},${domain_dn}"
 
       $groups_to_create.each | $group_name, $group_members | {
-        $formatted_members = platform::format_members($group_members, $users_path)
         dsc_adgroup { "ensure ${project_name} group ${group_name} exists":
           dsc_ensure           => 'present',
           dsc_groupname        => $group_name,
           dsc_groupscope       => 'global',
           dsc_category         => 'security',
           dsc_path             => $groups_path,
-          dsc_memberstoinclude => $formatted_members,
+          dsc_memberstoinclude => $group_members,
         }
       }
     }
