@@ -74,9 +74,11 @@ class platform::domain::control (
       }
     }
 
+    Notify { "Projects: ${projects}": }
     # Handle creation of all projects
     $projects.each | $project_name, $project_details | {
       $project_id = sprintf('%03d', $project_details['id'])
+      Notify { "Project: ${project_name} - ${project_details}": }
 
       $standard_groups = {
         "Admins-${project_id}" => $project_details['access']['admins'],
