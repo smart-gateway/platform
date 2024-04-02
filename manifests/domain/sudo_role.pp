@@ -17,7 +17,7 @@ define platform::domain::sudo_role (
     exec { "create-${role_name}":
       command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
-      unless    => "Get-ADObject -Filter 'Name -eq \"${role_name}\"' -SearchBase '${path}'",
+      unless    => "try { (Get-ADObject -Filter 'Name -eq \"${role_name}\"' -SearchBase '${path}').GetType() } catch { return \$false }",
       logoutput => true,
     }
   } elsif $ensure == 'absent' {
