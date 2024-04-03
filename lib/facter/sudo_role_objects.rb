@@ -29,7 +29,7 @@ Facter.add('sudo_role_objects') do
       PS
 
       # Run the PowerShell script and capture the output
-      result = Facter::Core::Execution.execute("powershell -command \"#{ps_script}\"", :timeout => 30)
+      result = Facter::Core::Execution.execute("powershell -command #{ps_script}", :timeout => 30)
 
       # Split the output into an array of names, unless it's empty
       objects = result.split("\n").reject(&:empty?) unless result.nil? || result.empty?
