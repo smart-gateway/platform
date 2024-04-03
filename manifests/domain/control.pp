@@ -121,7 +121,7 @@ class platform::domain::control (
         $host_portion = split($admin_group, 'Admins-')[1]
         $host = downcase($host_portion)
         Notify { "creating project: ${project_name} custom admin group: ${admin_group} - host: ${host}": }
-        platform::user::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
+        platform::domain::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
           ensure       => 'present',
           role_name    => $admin_group,
           path         => $sudoers_path,
