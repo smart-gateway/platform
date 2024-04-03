@@ -16,8 +16,7 @@ define platform::domain::sudo_role (
   $existing_sudo_roles = $facts['sudo_role_objects']
 
   if $ensure == 'present' and !($role_name in $existing_sudo_roles) {
-    notify { "Creating sudo role ${role_name}": }
-    -> exec { "create-${role_name}":
+    exec { "create-${role_name}":
       command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
       logoutput => true,
