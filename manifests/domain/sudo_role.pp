@@ -12,20 +12,20 @@ define platform::domain::sudo_role (
   String[1] $sudo_user,
   String[1] $sudo_command = 'ALL',
 ) {
-  if $ensure == 'present' {
-    Notify { "creating sudo role ${role_name}": }
-    exec { "create-${role_name}":
+  # Retrieve the custom fact as an array of existing sudoRole names
+  $existing_sudo_roles = $facts['sudo_role_objects']
+
+  if $ensure == 'present' and !($role_name in $existing_sudo_roles) {
+    notify { "Creating sudo role ${role_name}": }
+    -> exec { "create-${role_name}":
       command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
-      unless    => "\$obj = Get-ADObject -Filter 'Name -eq ${role_name}' -SearchBase ${path};
-                   if (${obj} -eq \$null) { Exit 1 } else { Exit 0 }",
       logoutput => true,
     }
-  } elsif $ensure == 'absent' {
+  } elsif $ensure == 'absent' and ($role_name in $existing_sudo_roles) {
     exec { "remove-${role_name}":
       command   => "Remove-ADObject -Identity '${role_name}' -Confirm:\$false",
       provider  => powershell,
-      onlyif    => "Get-ADObject -Filter 'Name -eq \"${role_name}\"' -SearchBase '${path}'",
       logoutput => true,
     }
   }
