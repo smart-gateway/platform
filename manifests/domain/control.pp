@@ -120,7 +120,7 @@ class platform::domain::control (
       $custom_admin_groups.each | $admin_group | {
         $host_portion = split($admin_group, 'Admins-')[1]
         $host = downcase($host_portion)
-        Notify { "creating custom admin group for ${host}": }
+        Notify { "creating project: ${project_name} custom admin group: ${admin_group} - host: ${host}": }
         platform::user::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
           ensure       => 'present',
           role_name    => $admin_group,
