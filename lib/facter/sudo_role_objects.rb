@@ -3,6 +3,7 @@ Facter.add('sudo_role_objects') do
 
   setcode do
     require 'win32/registry'
+    require 'base64'
     objects = []
 
     # Check if the system is a Domain Controller
@@ -29,8 +30,10 @@ Facter.add('sudo_role_objects') do
         }
       PS
 
+      encoded_script = Base64.strict_encode64(ps_script.encode('utf-16le'))
+
       # Run the PowerShell script and capture the output
-      result = Facter::Core::Execution.execute("powershell -command #{ps_script}", :timeout => 30)
+      result = Facter::Core::Execution.execute("powershell.exe -encodedCommand #{encoded_script}", :timeout => 30)
       Facter.debug("result of execution was: #{result}")
 
       # Split the output into an array of names, unless it's empty
