@@ -115,7 +115,7 @@ class platform::domain::control (
         sudo_command => 'ALL',
       }
 
-      $custom_admin_groups = $custom_groups.keys.filter |String $key| { $key =~ /^Admin-/ }
+      $custom_admin_groups = $custom_groups.keys.filter |String $key| { $key =~ /^Admins-/ }
       Notify { "custom sudo groups to create for project ${project_name}: ${custom_admin_groups}": }
       $custom_admin_groups.each | $admin_group | {
         $host_portion = split($admin_group, 'Admins-')[1]
