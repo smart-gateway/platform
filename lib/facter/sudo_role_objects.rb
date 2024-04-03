@@ -2,11 +2,20 @@ Facter.add('sudo_role_objects') do
   confine :kernel => 'windows'  # Ensure this fact only runs on Windows systems
 
   setcode do
+    require 'win32/registry'
     objects = []
 
     # Check if the system is a Domain Controller
-    is_dc = Facter::Core::Execution.execute('powershell -command "(Get-ADDomainController -ErrorAction SilentlyContinue) -ne $null"')
-    if is_dc.strip == 'True'
+    is_dc = false
+    begin
+      Win32::Registry::HKEY_LOCAL_MACHINE.open('SYSTEM\CurrentControlSet\Services\NTDS\Parameters') do |reg|
+        is_dc = true
+      end
+    rescue
+      is_dc = false
+    end
+
+    if is_dc
       # PowerShell script to find sudoRole objects
       ps_script = <<-PS
         try {
