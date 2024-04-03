@@ -116,11 +116,10 @@ class platform::domain::control (
       }
 
       $custom_admin_groups = $custom_groups.keys.filter |String $key| { $key =~ /^Admins-/ }
-      Notify { "custom sudo groups to create for project ${project_name}: ${custom_admin_groups}": }
       $custom_admin_groups.each | $admin_group | {
         $host_portion = split($admin_group, 'Admins-')[1]
-        $host = downcase($host_portion)
-        Notify { "creating project: ${project_name} custom admin group: ${admin_group} - host: ${host}": }
+        $host_lower = downcase($host_portion)
+        $host = split($host_lower, '\.')[0]
         platform::domain::sudo_role { "ensure ${project_name} sudo role ${admin_group}":
           ensure       => 'present',
           role_name    => $admin_group,
