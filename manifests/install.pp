@@ -25,23 +25,31 @@ class platform::install {
   }
 
   # Ensure shells and needed tools are installed
-  platform::packages::package { 'platform::ensure_zsh_installed':
-    ensure       => 'latest',
-    package_name => 'zsh',
-  }
-  platform::packages::package { 'platform::ensure_git_installed':
-    ensure       => 'latest',
-    package_name => 'git',
-  }
-  platform::packages::package { 'platform::ensure_curl_installed':
-    ensure       => 'latest',
-    package_name => 'curl',
+  $tools_packages = ['zsh', 'git', 'curl']
+
+  # Iterate over the array to ensure each package is installed
+  $tools_packages.each | String $package_name | {
+    platform::packages::package { "platform::ensure_${package_name}_installed":
+      ensure       => 'latest',
+      package_name => $package_name,
+    }
   }
 
   # Ensure ssh import tools are installed
   platform::packages::package { 'platform::ensure_ssh_import_id':
     ensure       => 'latest',
     package_name => 'ssh-import-id',
+  }
+
+  # Ensure packages needed for domain are installed
+  $domain_packages = ['sssd-ad', 'sssd-tools', 'realmd', 'adcli', 'libsss-sudo']
+
+  # Iterate over the array to ensure each package is installed
+  $domain_packages.each | String $package_name | {
+    platform::packages::package { "platform::ensure_${package_name}_installed":
+      ensure       => 'latest',
+      package_name => $package_name,
+    }
   }
 
   # Install packages from hiera
