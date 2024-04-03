@@ -14,6 +14,7 @@ Facter.add('sudo_role_objects') do
     rescue
       is_dc = false
     end
+    Facter.debug("is_dc evaluated to : #{is_dc}")
 
     if is_dc
       # PowerShell script to find sudoRole objects
@@ -30,6 +31,7 @@ Facter.add('sudo_role_objects') do
 
       # Run the PowerShell script and capture the output
       result = Facter::Core::Execution.execute("powershell -command #{ps_script}", :timeout => 30)
+      Facter.debug("result of execution was: #{result}")
 
       # Split the output into an array of names, unless it's empty
       objects = result.split("\r\n").reject(&:empty?) unless result.nil? || result.empty?
