@@ -53,7 +53,7 @@ class platform::access::active_directory (
         ensure    => file,
         content   => epp('platform/domain/etc/sssd/sssd.conf.epp', {
             'domain_controller' => $controller,
-            'domain_name_lower' => $domain_name_lower,
+            'domain_name_lower' => $domain_name,
             'domain_name_upper' => $domain_name_upper,
             'computer_name'     => $computer_name,
         }),
