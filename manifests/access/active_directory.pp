@@ -45,7 +45,7 @@ class platform::access::active_directory (
 
       file { '/etc/sssd/sssd.conf':
         ensure  => file,
-        content => epp('mymodule/sssd.conf.epp', { 'domain_controller' => $controller }),
+        content => epp('platform/domain/etc/sssd/sssd.conf.epp', { 'domain_controller' => $controller }),
         owner   => 'root',
         group   => 'root',
         mode    => '0600',
