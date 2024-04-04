@@ -14,11 +14,14 @@ class platform::access::active_directory (
   $computer_name = get($domain_settings, 'computer_name', '')
 
   if $ensure == 'joined' {
-    Notify { "Joining ${controller} as ${computer_name}": }
     if !$facts['joined_to_domain'] {
+      $domain_name = platform::dn_to_domain($domain_settings['domain_dn'])
+      $domain_name_upper = upcase($domain_name)
+
+      Notify { "Joining ${controller} as ${computer_name}": }
       exec { 'join-domain':
         command => "echo '${mgmt_pass}' | realm join ${controller} --user=${mgmt_user} --computer-name=${computer_name}",
-        unless  => "realm list | grep -q '${pdc}'",
+        unless  => "realm list | grep -q '${domain_name}'",
         path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
       }
 
@@ -27,6 +30,7 @@ class platform::access::active_directory (
         line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
         match              => '^AuthorizedKeysCommand\s+',
         append_on_no_match => true,
+        subscribe          => Exec['join-domain'],
       }
 
       file_line { 'AuthorizedKeysCommandUser':
@@ -34,6 +38,7 @@ class platform::access::active_directory (
         line               => 'AuthorizedKeysCommandUser nobody',
         match              => '^AuthorizedKeysCommandUser\s+',
         append_on_no_match => true,
+        subscribe          => Exec['join-domain'],
       }
 
       file_line { 'pam_mkhomedir':
@@ -41,28 +46,27 @@ class platform::access::active_directory (
         line               => 'session optional    pam_mkhomedir.so skel=/etc/skel umask=077',
         match              => 'pam_mkhomedir.so',
         append_on_no_match => true,
+        subscribe          => Exec['join-domain'],
       }
 
-      $domain_name_lower = platform::dn_to_domain($domain_settings['domain_dn'])
-      $domain_name_upper = upcase($domain_name_lower)
-
       file { '/etc/sssd/sssd.conf':
-        ensure  => file,
-        content => epp('platform/domain/etc/sssd/sssd.conf.epp', {
+        ensure    => file,
+        content   => epp('platform/domain/etc/sssd/sssd.conf.epp', {
             'domain_controller' => $controller,
             'domain_name_lower' => $domain_name_lower,
             'domain_name_upper' => $domain_name_upper,
             'computer_name'     => $computer_name,
         }),
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0600',
+        owner     => 'root',
+        group     => 'root',
+        mode      => '0600',
+        subscribe => Exec['join-domain'],
       }
 
       service { 'sssd':
         ensure    => running,
         enable    => true,
-        subscribe => Exec['join-domain'],
+        subscribe => File['/etc/sssd/sssd.conf'],
       }
 
       service { 'sshd':
@@ -75,7 +79,7 @@ class platform::access::active_directory (
     if $facts['joined_to_domain'] {
       Notify { "Leaving ${controller}": }
       exec { 'leave-domain':
-        command => "realm leave --user=${mgmt_user}",
+        command => 'realm leave',
         path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
       }
     }
