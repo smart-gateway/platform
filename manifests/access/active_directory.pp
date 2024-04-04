@@ -104,7 +104,7 @@ class platform::access::active_directory (
 
   file { '/etc/security/access.conf':
     ensure  => file,
-    content => epp('platform/access/etc/security/access.conf.epp', {
+    content => epp('platform/domain/etc/security/access.conf.epp', {
         'local_users'   => $local_users,
         'host_group'    => "users-${computer_name}",
         'project_group' => "users-${project_id}",
