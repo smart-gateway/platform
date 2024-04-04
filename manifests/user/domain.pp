@@ -37,15 +37,18 @@ define platform::user::domain (
   }
 
   # Handle any custom files
-  $files = get($details, 'files', {})
-  $files.each |String $filename, Hash $file_details| {
-    file { "${home_dir}/${filename}":
-      ensure  => file,
-      source  => $file_details['source'],
-      mode    => $file_details['mode'],
-      owner   => $username,
-      group   => $username,
-      replace => !$file_details['create_only'],
+  $home_directories = $facts['home_directories']
+  if $home_dir in $home_directories {
+    $files = get($details, 'files', {})
+    $files.each |String $filename, Hash $file_details| {
+      file { "${home_dir}/${filename}":
+        ensure  => file,
+        source  => $file_details['source'],
+        mode    => $file_details['mode'],
+        owner   => $username,
+        group   => $username,
+        replace => !$file_details['create_only'],
+      }
     }
   }
 }
