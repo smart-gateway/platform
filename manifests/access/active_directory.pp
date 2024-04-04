@@ -43,9 +43,16 @@ class platform::access::active_directory (
         append_on_no_match => true,
       }
 
+      $domain_name_lower = platform::dn_to_domain($domain_settings['domain_dn'])
+      $domain_name_upper = upcase($domain_name_lower)
+
       file { '/etc/sssd/sssd.conf':
         ensure  => file,
-        content => epp('platform/domain/etc/sssd/sssd.conf.epp', { 'domain_controller' => $controller }),
+        content => epp('platform/domain/etc/sssd/sssd.conf.epp', {
+            'domain_controller' => $controller,
+            'domain_name_lower' => $domain_name_lower,
+            'domain_name_upper' => $domain_name_upper,
+        }),
         owner   => 'root',
         group   => 'root',
         mode    => '0600',

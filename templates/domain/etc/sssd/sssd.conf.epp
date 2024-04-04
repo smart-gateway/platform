@@ -1,13 +1,8 @@
 <%- |
   String  $domain_controller,
+  String $domain_name_lower,
+  String $domain_name_upper,
 | -%>
-<%
-# Assuming $domain_controller is something like "dc01.jointpathfinding.com"
-# Extract the domain name in various forms
-$domain_name_lower = $domain_controller.split('.')[1..-1].join('.')
-$domain_name_upper = $domain_name_lower.upcase
-# $domain_controller already available as parameter
--%>
 [sssd]
 domains = <%= $domain_name_lower %>
 config_file_version = 2
