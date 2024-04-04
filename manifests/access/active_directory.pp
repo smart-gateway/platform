@@ -20,7 +20,7 @@ class platform::access::active_directory (
 
       Notify { "Joining ${controller} as ${computer_name}": }
       exec { 'join-domain':
-        command => "echo '${mgmt_pass}' | realm join ${controller} --user=${mgmt_user} --computer-name=${computer_name}",
+        command => "echo '${mgmt_pass.unwrap}' | realm join ${controller} --user=${mgmt_user.unwrap} --computer-name=${computer_name}",
         unless  => "realm list | grep -q '${domain_name}'",
         path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
       }
