@@ -15,7 +15,7 @@ class platform::access::active_directory (
 
   if $ensure == 'joined' {
     Notify { "Joining ${controller} as ${computer_name}": }
-    if !facts['joined_to_domain'] {
+    if !$facts['joined_to_domain'] {
       exec { 'join-domain':
         command => "echo '${mgmt_pass}' | realm join ${controller} --user=${mgmt_user} --computer-name=${computer_name}",
         unless  => "realm list | grep -q '${pdc}'",
@@ -64,7 +64,7 @@ class platform::access::active_directory (
       }
     }
   } elsif $ensure == 'absent' {
-    if facts['joined_to_domain'] {
+    if $facts['joined_to_domain'] {
       Notify { "Leaving ${controller}": }
       exec { 'leave-domain':
         command => "realm leave --user=${mgmt_user}",
