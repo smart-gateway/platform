@@ -15,6 +15,11 @@ define platform::user::domain (
   $ssh_directory = "${home_dir}/.ssh"
   $authorized_keys_path = "${ssh_directory}/authorized_keys"
 
+  $shell_opts = get($details, 'shell-options', {})
+  $zsh_options = get($shell_opts, 'zsh', {})
+  $bash_options = get($shell_opts, 'bash', {})
+  $sh_options = get($shell_opts, 'sh', {})
+
   # Ensure users bash customizations are executed
   platform::shells::bash_user { "bash_user_${username}":
     username                         => $username,
