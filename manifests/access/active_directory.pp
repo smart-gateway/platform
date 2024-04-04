@@ -14,6 +14,7 @@ class platform::access::active_directory (
   $computer_name = get($domain_settings, 'computer_name', '')
 
   if $ensure == 'joined' {
+    Notify { "Joining ${controller} as ${computer_name}": }
     if !facts['joined_to_domain'] {
       exec { 'join-domain':
         command => "echo '${mgmt_pass}' | realm join ${controller} --user=${mgmt_user} --computer-name=${computer_name}",
