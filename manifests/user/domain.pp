@@ -35,4 +35,17 @@ define platform::user::domain (
     managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
     shell_options                    => $zsh_options,
   }
+
+  # Handle any custom files
+  $files = get($details, 'files', {})
+  $files.each |String $filename, Hash $file_details| {
+    file { "${home_dir}/${filename}":
+      ensure  => file,
+      source  => $file_details['source'],
+      mode    => $file_details['mode'],
+      owner   => $username,
+      group   => $username,
+      replace => !$file_details['create_only'],
+    }
+  }
 }
