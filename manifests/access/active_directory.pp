@@ -52,6 +52,7 @@ class platform::access::active_directory (
             'domain_controller' => $controller,
             'domain_name_lower' => $domain_name_lower,
             'domain_name_upper' => $domain_name_upper,
+            'computer_name'     => $computer_name,
         }),
         owner   => 'root',
         group   => 'root',
