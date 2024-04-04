@@ -1,0 +1,34 @@
+<%- |
+  String  $domain_controller,
+| -%>
+<%
+# Assuming $domain_controller is something like "dc01.jointpathfinding.com"
+# Extract the domain name in various forms
+$domain_name_lower = $domain_controller.split('.')[1..-1].join('.')
+$domain_name_upper = $domain_name_lower.upcase
+# $domain_controller already available as parameter
+-%>
+[sssd]
+domains = <%= $domain_name_lower %>
+config_file_version = 2
+services = nss, pam, sudo
+
+[domain/<%= $domain_name_lower %>]
+default_shell = /bin/bash
+ad_server = <%= $domain_controller %>
+krb5_store_password_if_offline = True
+cache_credentials = True
+krb5_realm = <%= $domain_name_upper %>
+realmd_tags = manages-system joined-with-adcli
+id_provider = ad
+ldap_sasl_authid = MGMT$
+fallback_homedir = /home/%u
+ad_domain = <%= $domain_name_lower %>
+use_fully_qualified_names = False
+ldap_id_mapping = True
+access_provider = ad
+ldap_user_extra_attrs = sshPublicKey:sshPublicKey
+ad_gpo_access_control = disabled
+ldap_user_ssh_public_key = sshPublicKey
+ldap_sudo_smart_refresh_interval = 300
+ldap_sudo_include_regexp = true

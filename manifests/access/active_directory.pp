@@ -11,11 +11,77 @@ class platform::access::active_directory (
   $controller = get($domain_settings, 'controller', '')
   $mgmt_user = Sensitive(get($domain_settings, 'mgmt_user', ''))
   $mgmt_pass = Sensitive(get($domain_settings, 'mgmt_pass', ''))
+  $computer_name = get($domain_settings, 'computer_name', '')
 
+  if $ensure == 'joined' {
+    if !facts['joined_to_domain'] {
+      exec { 'join-domain':
+        command => "echo '${mgmt_pass}' | realm join ${controller} --user=${mgmt_user} --computer-name=${computer_name}",
+        unless  => "realm list | grep -q '${pdc}'",
+        path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
+      }
 
+      file_line { 'AuthorizedKeysCommand':
+        path               => '/etc/ssh/sshd_config',
+        line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
+        match              => '^AuthorizedKeysCommand\s+',
+        append_on_no_match => true,
+      }
 
+      file_line { 'AuthorizedKeysCommandUser':
+        path               => '/etc/ssh/sshd_config',
+        line               => 'AuthorizedKeysCommandUser nobody',
+        match              => '^AuthorizedKeysCommandUser\s+',
+        append_on_no_match => true,
+      }
 
-  notify { "Ensure: ${ensure} | DC: ${controller} | User: ${mgmt_user} | Pass: ${mgmt_pass}": }
+      file_line { 'pam_mkhomedir':
+        path               => '/etc/pam.d/common-session',
+        line               => 'session optional    pam_mkhomedir.so skel=/etc/skel umask=077',
+        match              => 'pam_mkhomedir.so',
+        append_on_no_match => true,
+      }
+
+      file { '/etc/sssd/sssd.conf':
+        ensure  => file,
+        content => epp('mymodule/sssd.conf.epp', { 'domain_controller' => $controller }),
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0600',
+      }
+
+      service { 'sssd':
+        ensure    => running,
+        enable    => true,
+        subscribe => Exec['join-domain'],
+      }
+
+      service { 'sshd':
+        ensure    => running,
+        enable    => true,
+        subscribe => File_line['AuthorizedKeysCommand'],
+      }
+    }
+  }
+
+  # === FILES OF INTEREST WHEN JOINED TO THE DOMAIN ===
+  # sssd.conf
+  # krb5.conf
+  # nsswitch.conf
+  # pam.d/common-account
+  # pam.d/common-auth
+  # pam.d/common-password
+  # pam.d/common-session
+  # pam.d/common-session-noninteractive
+  # pam.d/other
+  # pam.d/sudo
+  # sssd.conf
+  # sssd.conf.d
+  # sssd.conf.d/README
+  # sssd.conf.d/dbus.conf
+  # sssd.conf.d/sssd-ad.conf
+  # sssd.conf.d/sssd-ldap.conf
+  # sssd.conf.d/sssd-proxy
 }
 # /etc/default/locale
 # /etc/environment
