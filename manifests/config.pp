@@ -24,6 +24,7 @@ class platform::config {
 
   # Setup access controls
   -> class { 'platform::access::control':
+    domain_settings => $platform::domain,
   }
 
   # Install users from hiera
