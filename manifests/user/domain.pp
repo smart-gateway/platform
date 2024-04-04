@@ -46,7 +46,7 @@ define platform::user::domain (
         source  => $file_details['source'],
         mode    => $file_details['mode'],
         owner   => $username,
-        group   => $username,
+        group   => 'domain users',
         replace => !$file_details['create_only'],
       }
     }
