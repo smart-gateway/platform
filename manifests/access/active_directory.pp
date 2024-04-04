@@ -63,6 +63,15 @@ class platform::access::active_directory (
         subscribe => File_line['AuthorizedKeysCommand'],
       }
     }
+  } elsif $ensure == 'absent' {
+    if facts['joined_to_domain'] {
+      Notify { "Leaving ${controller}": }
+      exec { 'leave-domain':
+        command => "realm leave --user=${mgmt_user}",
+        path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
+      }
+  } else {
+    fail('Unknown ensure value')
   }
 
   # === FILES OF INTEREST WHEN JOINED TO THE DOMAIN ===
