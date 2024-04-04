@@ -68,7 +68,7 @@ define platform::shells::zsh_user (
     $shell_options.each | $option_key, $option_details | {
       case $option_key {
         'oh-my-zsh': {
-          platform::shells::zsh::ohmyzsh { $option_key:
+          platform::shells::zsh::ohmyzsh { "setup ${option_key} for ${username}":
             user             => $username,
             home             => $home_dir,
             user_scripts_dir => $user_scripts_dir,
@@ -76,7 +76,7 @@ define platform::shells::zsh_user (
           }
         }
         'powerlevel10k': {
-          platform::shells::zsh::powerlevel10k { $option_key:
+          platform::shells::zsh::powerlevel10k { "setup ${option_key} for ${username}":
             user             => $username,
             home             => $home_dir,
             user_scripts_dir => $user_scripts_dir,
