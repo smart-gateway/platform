@@ -264,3 +264,13 @@ or using Bash
 ```bash
 echo -n "S3cr3tP@ssw0rd" | openssl rsautl -encrypt -pubin -inkey domain_users_public.pem | openssl base64 -A > encrypted_password.txt
 ```
+
+## UNSORTED
+
+### Add `pp_instance_id`
+
+Rather then having the project number in a table in the module which requires a lot of updating
+as new projects are added they will instead be in the csr_attributes.yaml file which will add them
+as trusted facts on the system. There is also some cholesterol around the shared context and mgmt 
+systems vs non-mgmt systems. This should all be removed also as shared should become project zero
+and access to specific hosts can be handled via the project files. 

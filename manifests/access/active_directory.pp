@@ -14,6 +14,7 @@ class platform::access::active_directory (
   $computer_name = get($domain_settings, 'computer_name', '')
 
   if $ensure == 'joined' {
+    # Join system to the domain if not already joined
     if !$facts['joined_to_domain'] {
       $domain_name = platform::dn_to_domain($domain_settings['domain_dn'])
       $domain_name_upper = upcase($domain_name)
@@ -85,6 +86,32 @@ class platform::access::active_directory (
     }
   } else {
     fail('Unknown ensure value')
+  }
+
+  # Setup access.conf file
+  $project = $trusted['extensions']['pp_project']
+  $cluster = $trusted['extensions']['pp_cluster']
+  $project_id = $trusted['extensions']['pp_instance_id']
+
+  # NOTE: This should be reworked, we shouldn't be accessing hiera right here
+  $users = $platform::users
+  $users.each | $username, $details | {
+    $type = get($details, 'type', 'local')
+  }
+  $local_users = $users.filter | $username, $details | {
+    $details['type'] == 'local'
+  }.keys
+
+  file { '/etc/security/access.conf':
+    ensure  => file,
+    content => epp('platform/access/etc/security/access.conf.epp', {
+        'local_users'   => $local_users,
+        'host_group'    => "users-${computer_name}",
+        'project_group' => "users-${project_id}",
+    }),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
   }
 
   # === FILES OF INTEREST WHEN JOINED TO THE DOMAIN ===
