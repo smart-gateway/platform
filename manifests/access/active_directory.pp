@@ -70,6 +70,7 @@ class platform::access::active_directory (
         command => "realm leave --user=${mgmt_user}",
         path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
       }
+    }
   } else {
     fail('Unknown ensure value')
   }
