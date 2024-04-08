@@ -7,7 +7,7 @@
 class platform::config {
   # Set the timezone
   if $platform::manage_timezone {
-    class { 'platform::timezone':
+    class { 'platform::utils::timezone':
       timezone => $platform::timezone,
     }
   }
