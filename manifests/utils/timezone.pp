@@ -41,10 +41,9 @@ class platform::utils::timezone (
       }
 
       exec { 'set_windows_timezone':
-        command  => "tzutil /s \"${windows_timezone}\"",
+        command  => "Set-TimeZone -Id \"${windows_timezone}\"",
         provider => powershell,
         unless   => "if ((Get-Timezone).Id -eq '${windows_timezone}') { exit 0 } else { exit 1 }",
-        path     => 'C:\\Windows\\System32',
       }
     }
     default: {
