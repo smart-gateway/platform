@@ -92,7 +92,7 @@ class platform::access::active_directory (
   $project = $trusted['extensions']['pp_project']
   $cluster = $trusted['extensions']['pp_cluster']
   $project_id = $trusted['extensions']['pp_instance_id']
-
+  Notify { "Project ID: ${project_id}": }
   # NOTE: This should be reworked, we shouldn't be accessing hiera right here
   $users = $platform::users
   $users.each | $username, $details | {
@@ -113,6 +113,19 @@ class platform::access::active_directory (
     group   => 'root',
     mode    => '0644',
   }
+
+  #%CAPABILITIES%
+  # join a domain
+  # leave a domain
+  # configure sssd
+  #  - configure sssd.conf
+  #  - setup ad authorized sudo access
+  # configure ssh
+  # configure access.conf
+  #  - add local users
+  #  - add host specific group
+  #  - add project specific group
+  #%END%
 
   # === FILES OF INTEREST WHEN JOINED TO THE DOMAIN ===
   # sssd.conf
