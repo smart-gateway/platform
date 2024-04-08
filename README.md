@@ -63,13 +63,24 @@ examples. Include three to five examples of the most important or common tasks a
 user can accomplish with your module. Show users how to accomplish more complex
 tasks that involve different types, classes, and functions working in tandem.
 
+### Important Notes
+
+1. Puppet configuration on Windows and Linux needs an extra section that we haven't previously provisioned. This section is the `user` section which controls the other puppet tools and commands. This includes plugin downloads.
+
+```text
+...existing sections [agent] and [server]...
+[user]
+server = puppet.example.com
+certname = <certname>
+```
+
 ### Features
 - [x] General
   - [x] Encrypted Hiera Support
   - [x] Domain Information
   - [x] Project Information
 - [ ] System Basics
-  - [ ] Configure Timezone
+  - [x] Configure Timezone
   - [ ] Configure NTP
   - [ ] Configure DNS
 - [x] User Management
