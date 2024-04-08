@@ -5,7 +5,7 @@
 # @example
 #   include platform::utils::timezone
 class platform::utils::timezone (
-  String $timezone = 'America/Los_angeles'
+  String $timezone
 ) {
   # Mapping of common timezone IDs to Windows Timezone IDs
   $windows_timezone_map = {

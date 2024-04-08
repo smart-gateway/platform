@@ -13,6 +13,8 @@ class platform (
   String $puppet_exporter_binary_location = '/usr/local/bin/puppet-agent-exporter',
   String $managed_shell_startup_global_dir = '/etc/%src.managed.d', # these strings have a format string in them so different shells can use them
   String $managed_shell_startup_user_dir = '.%src.managed.d', # these strings have a format string in them so different shells can use them
+  Boolean $manage_timezone = true,
+  String $timezone = 'America/Los_Angeles',
   Hash $users = {},
   Hash $domain = {},
   Hash $packages = {},
