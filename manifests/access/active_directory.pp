@@ -116,6 +116,14 @@ class platform::access::active_directory (
     mode    => '0644',
   }
 
+  # Ensure that the config file is being used for access
+  -> file_line { 'enable /etc/security/access.conf in /etc/pam.d/common-account':
+    ensure  => present,
+    path    => '/etc/pam.d/common-account',
+    line    => 'account  required       pam_access.so',
+    match   => '^account\s+required\s+pam_access\.so',
+    replace => false,
+  }
   #%CAPABILITIES%
   # join a domain
   # leave a domain
