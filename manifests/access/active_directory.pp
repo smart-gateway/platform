@@ -92,8 +92,6 @@ class platform::access::active_directory (
   $project = $trusted['extensions']['pp_project']
   $cluster = $trusted['extensions']['pp_cluster']
   $project_id = $trusted['extensions']['pp_instance_id']
-  $project_id_type = type($project_id)
-  notify { "Project ID: ${project_id}, Type: ${project_id_type}": }
 
   # NOTE: This should be reworked, we shouldn't be accessing hiera right here
   $users = $platform::users

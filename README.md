@@ -63,6 +63,79 @@ examples. Include three to five examples of the most important or common tasks a
 user can accomplish with your module. Show users how to accomplish more complex
 tasks that involve different types, classes, and functions working in tandem.
 
+### Features
+- [x] General
+  - [x] Encrypted Hiera Support
+  - [x] Domain Information
+  - [x] Project Information
+- [ ] System Basics
+  - [ ] Configure Timezone
+  - [ ] Configure NTP
+  - [ ] Configure DNS
+- [x] User Management
+  - [x] Create Local Users
+    - [x] Configure Users Shell
+    - [x] Configure Shell Extensions
+    - [x] Provision SSH Keys
+        - [x] Provision SSH Keys from Hiera
+        - [x] Provision SSH Keys from GitHub or LaunchPad
+    - [x] Provision Arbitrary Files
+  - [x] Create Domain Users
+    - [ ] Configure Users Shell
+    - [x] Configure Shell Extensions
+    - [ ] Provision SSH Keys
+        - [ ] Provision SSH Keys from Hiera
+        - [ ] Provision SSH Keys from GitHub or LaunchPad
+    - [x] Provision Arbitrary Files
+- [x] Access Control
+  - [x] Join Domain
+  - [x] Configure Access Control
+    - [x] Support Per-Project Access
+    - [x] Support Per-System Access
+  - [x] Configure Sudo Access
+    - [x] Support Per-Project Sudo
+    - [x] Support Per-System Sudo
+- [ ] Firewall
+  - [ ] Configure iptables
+  - [ ] Configure nftables
+- [ ] Monitoring
+    - [ ] Node Exporter
+- [ ] Logging
+    - [ ] Command Execution Logging
+- [x] Tools
+  - [x] Netcheck
+- [x] Facts
+  - [x] Domain Joined
+  - [x] Domain Information
+  - [x] Home Directories
+  - [x] Domain Controller
+  - [x] Sudo Roles
+- [ ] WEMO
+  - [ ] WEMO Install
+  - [ ] WEMO Configuration
+  - [ ] WEMO Rule Manipulation
+- [ ] System Deployment
+  - [ ] MAAS
+  - [ ] Virtualization
+    - [ ] Libvirt
+    - [ ] LXD
+- [ ] Switch Management
+  - [ ] Cisco Switch Configuration
+  - [ ] Whitebox Switch Configuration
+  - [ ] OVS
+    - [ ] OVS Install
+    - [ ] OVS Configuration
+- [ ] DNS
+- [ ] GitHub Runners
+  - [ ] Deploy GitHub Runner
+  - [ ] Configure GitHub Runner
+  - [ ] Deploy Secrets
+- [ ] Puppet Server
+  - [ ] Configure Puppet Server
+  - [ ] Deploy Control Repo
+  - [ ] Create GitHub Runner
+  - [ ] Configure Pipelines
+
 ## Reference
 
 This section is deprecated. Instead, add reference information to your code as
