@@ -23,12 +23,6 @@ class platform::config {
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
     require                            => Class['platform::install'],
   }
-  #
-  # # Setup domain controls
-  # -> class { 'platform::domain::control':
-  #   require         => Class['platform::install'],
-  #   domain_settings => $platform::domain,
-  # }
 
   # Setup access controls
   -> class { 'platform::access::control':
