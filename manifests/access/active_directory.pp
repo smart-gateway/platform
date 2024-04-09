@@ -89,11 +89,6 @@ class platform::access::active_directory (
   }
 
   # Setup access.conf file
-  $project = $trusted['extensions']['pp_project']
-  $cluster = $trusted['extensions']['pp_cluster']
-  $project_id = $trusted['extensions']['pp_instance_id']
-
-  # NOTE: This should be reworked, we shouldn't be accessing hiera right here
   $users = $platform::users
   $users.each | $username, $details | {
     $type = get($details, 'type', 'local')
@@ -107,7 +102,7 @@ class platform::access::active_directory (
     content => epp('platform/domain/etc/security/access.conf.epp', {
         'local_users'   => $local_users,
         'host_group'    => "users-${computer_name}",
-        'project_group' => "users-${project_id}",
+        'project_group' => "users-${platform::project_id}",
     }),
     owner   => 'root',
     group   => 'root',
