@@ -6,7 +6,6 @@
 #   include platform::config
 class platform::config {
   # Set the timezone
-  Notify { "Manage timezone: ${platform::manage_timezone}": }
   if $platform::manage_timezone {
     class { 'platform::utils::timezone':
       timezone => $platform::timezone,

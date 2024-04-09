@@ -75,6 +75,9 @@ certname = <certname>
 ```
 
 ### Features
+
+#### platform
+
 - [x] General
   - [x] Encrypted Hiera Support
   - [x] Domain Information
@@ -146,6 +149,28 @@ certname = <certname>
   - [ ] Deploy Control Repo
   - [ ] Create GitHub Runner
   - [ ] Configure Pipelines
+
+#### platform::domain
+
+- [x] Users
+  - [x] Create New Users
+  - [x] Delete Users
+- [x] Groups
+  - [x] Create New Groups
+  - [x] Delete Groups
+  - [x] Add Users to Groups
+  - [x] Add Groups to Groups
+- [x] Organizational Units
+  - [x] Create New Organizational Units
+  - [x] Delete Organizational Units
+- [x] Sudo
+  - [x] Create New Sudo Roles
+  - [x] Configure Sudo Role Groups
+  - [x] Configure Sudo Role Commands
+  - [x] Configure Sudo Role Hosts
+- [ ] Domain Name Services
+  - [ ] Create new DNS Records
+  - [ ] Delete DNS Records
 
 ## Reference
 

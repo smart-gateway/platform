@@ -31,5 +31,11 @@ class platform (
     -> Class['platform::install']
     -> Class['platform::config']
     -> Class['platform::service']
+  } else {
+    if $platform::manage_timezone {
+      class { 'platform::utils::timezone':
+        timezone => $platform::timezone,
+      }
+    }
   }
 }
