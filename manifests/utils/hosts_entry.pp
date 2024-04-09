@@ -6,7 +6,6 @@
 #   platform::utils::hosts_entry { 'namevar': }
 define platform::utils::hosts_entry (
   Enum['present', 'absent'] $ensure = 'present',
-  String $name = $title,
   String $ip,
   Optional[String] $aliases = undef,
   Optional[String] $comment = undef,
