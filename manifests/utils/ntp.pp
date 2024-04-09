@@ -12,13 +12,15 @@ class platform::utils::ntp (
   String $poll_interval_max_sec = '2048',
 ) {
   # Ensure that the ntp package is not installed
-  platform::packages::packages { 'ntp':
-    ensure => absent,
+  platform::packages::package { 'platform::utils::ntp:ensure_ntp_not_installed':
+    ensure       => absent,
+    package_name => 'ntp',
   }
 
   # Ensure that the systemd-timesyncd package is installed
-  ->platform::packages::packages { 'systemd-timesyncd':
-    ensure => present,
+  ->platform::packages::package { 'platform::utils::ntp:ensure_systemd-timesyncd_installed':
+    ensure       => present,
+    package_name => 'systemd-timesyncd',
   }
 
   # Create the configuration file
