@@ -7,7 +7,7 @@
 define platform::utils::hosts_entry (
   Enum['present', 'absent'] $ensure = 'present',
   String $ip,
-  Optional[String] $aliases = undef,
+  Optional[Array[String]] $aliases = undef,
   Optional[String] $comment = undef,
 ) {
   $target = $facts['kernel'] ? {
