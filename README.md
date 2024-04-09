@@ -86,6 +86,18 @@ certname = <certname>
   - [x] Configure Timezone
   - [ ] Configure NTP
   - [ ] Configure DNS
+  - [ ] Hosts File Manipulation
+- [ ] Networking
+  - [ ] Configure Network Interfaces
+  - [ ] Configure Network Routing
+- [ ] Remote Management
+  - [ ] SSH Configuration
+  - [ ] RDP Configuration
+  - [ ] WinRM Configuration
+  - [ ] IPMI Configuration
+  - [ ] IPMI User Management
+  - [ ] IPMI Enablement
+  - [ ] IPMI Disablement
 - [x] User Management
   - [x] Create Local Users
     - [x] Configure Users Shell
@@ -124,31 +136,7 @@ certname = <certname>
   - [x] Home Directories
   - [x] Domain Controller
   - [x] Sudo Roles
-- [ ] WEMO
-  - [ ] WEMO Install
-  - [ ] WEMO Configuration
-  - [ ] WEMO Rule Manipulation
-- [ ] System Deployment
-  - [ ] MAAS
-  - [ ] Virtualization
-    - [ ] Libvirt
-    - [ ] LXD
-- [ ] Switch Management
-  - [ ] Cisco Switch Configuration
-  - [ ] Whitebox Switch Configuration
-  - [ ] OVS
-    - [ ] OVS Install
-    - [ ] OVS Configuration
 - [ ] DNS
-- [ ] GitHub Runners
-  - [ ] Deploy GitHub Runner
-  - [ ] Configure GitHub Runner
-  - [ ] Deploy Secrets
-- [ ] Puppet Server
-  - [ ] Configure Puppet Server
-  - [ ] Deploy Control Repo
-  - [ ] Create GitHub Runner
-  - [ ] Configure Pipelines
 
 #### platform::domain
 
@@ -172,6 +160,33 @@ certname = <certname>
   - [ ] Create new DNS Records
   - [ ] Delete DNS Records
 
+#### platform::<need_to_be_sorted_still>
+
+- [ ] WEMO
+  - [ ] WEMO Install
+  - [ ] WEMO Configuration
+  - [ ] WEMO Rule Manipulation
+- [ ] System Deployment
+  - [ ] MAAS
+  - [ ] Virtualization
+    - [ ] Libvirt
+    - [ ] LXD
+- [ ] Switch Management
+  - [ ] Cisco Switch Configuration
+  - [ ] Whitebox Switch Configuration
+  - [ ] OVS
+    - [ ] OVS Install
+    - [ ] OVS Configuration
+- [ ] GitHub Runners
+  - [ ] Deploy GitHub Runner
+  - [ ] Configure GitHub Runner
+  - [ ] Deploy Secrets
+- [ ] Puppet Server
+  - [ ] Configure Puppet Server
+  - [ ] Deploy Control Repo
+  - [ ] Create GitHub Runner
+  - [ ] Configure Pipelines
+  
 ## Reference
 
 This section is deprecated. Instead, add reference information to your code as

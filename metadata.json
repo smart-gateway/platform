@@ -6,9 +6,18 @@
   "license": "Apache-2.0",
   "source": "",
   "dependencies": [
-    { "name": "dsc-activedirectorydsc", "version_requirement": ">=6.4.0-0-0" }
+    { "name": "dsc-activedirectorydsc", "version_requirement": ">=6.4.0-0-0" },
+    { "name": "puppetlabs-host_core", "version_requirment": ">=1.0.0" }
   ],
   "operatingsystem_support": [
+    {
+      "operatingsystem": "Windows",
+        "operatingsystemrelease": [
+            "2016",
+            "2019",
+            "2022"
+        ]
+    },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [

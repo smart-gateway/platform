@@ -32,6 +32,7 @@ class platform (
     -> Class['platform::config']
     -> Class['platform::service']
   } elsif $facts['kernel'] == 'windows' {
+    # TODO: This is temporary, ideally the main flow above would support Windows and Linux. For now the Windows support isn't needed so no time has been given to enabling it
     if $platform::manage_timezone {
       class { 'platform::utils::timezone':
         timezone => $platform::timezone,
