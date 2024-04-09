@@ -84,7 +84,7 @@ certname = <certname>
   - [x] Project Information
 - [ ] System Basics
   - [x] Configure Timezone
-  - [ ] Configure NTP
+  - [x] Configure NTP
   - [ ] Configure DNS
   - [x] Hosts File Manipulation
 - [ ] Networking

@@ -39,6 +39,34 @@ define platform::user::domain (
   # Handle any custom files
   $home_directories = $facts['home_directories']
   if $home_dir in $home_directories {
+    # Ensure the authorized_keys file exists
+    file { "ensure_${username}_ssh_directory_exists":
+      ensure => directory,
+      path   => $ssh_directory,
+      owner  => $username,
+      group  => $username,
+      mode   => '0700',
+    }
+    -> file { "ensure_${username}_authorized_keys_exists":
+      ensure => file,
+      path   => $authorized_keys_path,
+      owner  => $username,
+      group  => $username,
+      mode   => '0600',
+    }
+
+    # Add authorized keys for the user and import any GitHub or Launchpad keys
+    $keys = get($details, 'keys', {})
+    $keys.each | $key_name, $key_details | {
+      ssh_authorized_key { "${username}_${key_name}":
+        ensure  => $key_details[ensure],
+        user    => $username,
+        type    => "ssh-${key_details[key_type]}",
+        key     => $key_details[key_value],
+        require => File["ensure_${username}_authorized_keys_exists"],
+      }
+    }
+
     $files = get($details, 'files', {})
     $files.each |String $filename, Hash $file_details| {
       file { "${home_dir}/${filename}":
