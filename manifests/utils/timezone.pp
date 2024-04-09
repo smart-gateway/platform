@@ -9,11 +9,11 @@ class platform::utils::timezone (
 ) {
   # Mapping of common timezone IDs to Windows Timezone IDs
   $windows_timezone_map = {
-    'America/Los_Angeles' => 'Pacific Standard Time',
-    'America/New_York'    => 'Eastern Standard Time',
-    'America/Chicago'     => 'Central Standard Time',
-    'America/Denver'      => 'Mountain Standard Time',
-    'UTC'                 => 'UTC',
+    'America/Los_Angeles' => ['Pacific Standard Time', 'Pacific Daylight Time'],
+    'America/New_York'    => ['Eastern Standard Time', 'Eastern Daylight Time'],
+    'America/Chicago'     => ['Central Standard Time', 'Central Daylight Time'],
+    'America/Denver'      => ['Mountain Standard Time', 'Mountain Daylight Time'],
+    'UTC'                 => ['UTC'],
     # Add more mappings as necessary
   }
 
@@ -40,10 +40,11 @@ class platform::utils::timezone (
         default => $windows_timezone_map[$timezone],
       }
 
-      exec { 'set_windows_timezone':
-        command  => "Set-TimeZone -Id \"${windows_timezone}\"",
-        provider => powershell,
-        unless   => "if ((Get-Timezone).Id -eq '${windows_timezone}') { exit 0 } else { exit 1 }",
+      if !member($windows_timezone, $facts['timezone']) {
+        exec { 'set_windows_timezone':
+          command  => "Set-TimeZone -Id \"${windows_timezone[0]}\"",
+          provider => powershell,
+        }
       }
     }
     default: {
