@@ -19,6 +19,7 @@ class platform (
   Hash $users = {},
   Hash $domain = {},
   Hash $packages = {},
+  Hash $hosts_entries = {},
 ) {
   if $facts['kernel'] ==  'Linux' {
     contain platform::prep

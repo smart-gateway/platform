@@ -12,6 +12,16 @@ class platform::config {
     }
   }
 
+  # Setup hosts entries
+  $hosts_entries = $platform::hosts_entries
+  $hosts_entries.each |$host, $settings| {
+    platform::utils::hosts_entry { $host:
+      ip      => $settings[ip],
+      aliases => $settings[aliases],
+      comment => $settings[comment],
+    }
+  }
+
   # Setup startup scripts for supported shells
   class { 'platform::shells::bash':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
