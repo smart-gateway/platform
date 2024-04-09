@@ -17,10 +17,10 @@ define platform::utils::hosts_entry (
   }
 
   host { $name:
-    ensure  => $ensure,
-    ip      => $ip,
-    target  => $target,
-    aliases => $aliases,
-    comment => $comment,
+    ensure       => $ensure,
+    ip           => $ip,
+    target       => $target,
+    host_aliases => $aliases,
+    comment      => $comment,
   }
 }
