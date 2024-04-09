@@ -22,6 +22,11 @@ class platform::config {
     }
   }
 
+  # Setup ntp service
+  class { 'platform::utils::ntp':
+    ntp_servers => $platform::ntp['servers'],
+  }
+
   # Setup startup scripts for supported shells
   class { 'platform::shells::bash':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,

@@ -4,6 +4,10 @@
   String $domain_name_upper,
   String $computer_name,
 | -%>
+################################################################################################
+# This file is managed by Puppet.
+# DO NOT EDIT. Changes will be overwritten.
+################################################################################################
 [sssd]
 domains = <%= $domain_name_lower %>
 config_file_version = 2

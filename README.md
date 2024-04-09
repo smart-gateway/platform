@@ -86,7 +86,7 @@ certname = <certname>
   - [x] Configure Timezone
   - [ ] Configure NTP
   - [ ] Configure DNS
-  - [ ] Hosts File Manipulation
+  - [x] Hosts File Manipulation
 - [ ] Networking
   - [ ] Configure Network Interfaces
   - [ ] Configure Network Routing
