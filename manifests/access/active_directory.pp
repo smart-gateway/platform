@@ -26,7 +26,7 @@ class platform::access::active_directory (
       }
     }
 
-    class { 'platform::access:ssh':
+    class { 'platform::access::ssh':
       ensure                       => 'present',
       authorized_keys_command      => '/usr/bin/sss_ssh_authorizedkeys',
       authorized_keys_command_user => 'nobody',
