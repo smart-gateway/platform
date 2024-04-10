@@ -44,14 +44,14 @@ define platform::user::domain (
       ensure => directory,
       path   => $ssh_directory,
       owner  => $username,
-      group  => $username,
+      group  => 'domain users',
       mode   => '0700',
     }
     -> file { "ensure_${username}_authorized_keys_exists":
       ensure => file,
       path   => $authorized_keys_path,
       owner  => $username,
-      group  => $username,
+      group  => 'domain users',
       mode   => '0600',
     }
 
