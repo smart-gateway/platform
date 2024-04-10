@@ -14,6 +14,7 @@ class platform::install {
     ensure => $platform::ensure_netcheck,
     source => 'puppet:///modules/platform/tools/netcheck/netcheck.py',
     path   => $platform::netcheck_binary_location,
+    tag    => ['tools', 'install'],
   }
 
   # Install puppet agent exporter for prometheus monitoring
@@ -22,6 +23,7 @@ class platform::install {
     source => 'puppet:///modules/platform/tools/exporter/puppet-agent-exporter',
     path   => $platform::puppet_exporter_binary_location,
     notify => Platform::Utils::Manage_service['puppet_agent_exporter'],
+    tag    => ['tools', 'install'],
   }
 
   # Ensure shells and needed tools are installed
@@ -32,6 +34,7 @@ class platform::install {
     platform::packages::package { "platform::ensure_${package_name}_installed":
       ensure       => 'latest',
       package_name => $package_name,
+      tag          => ['tools', 'shells', 'install'],
     }
   }
 
@@ -39,6 +42,7 @@ class platform::install {
   platform::packages::package { 'platform::ensure_ssh_import_id':
     ensure       => 'latest',
     package_name => 'ssh-import-id',
+    tag          => ['tools', 'install'],
   }
 
   # Ensure packages needed for domain are installed
@@ -49,6 +53,7 @@ class platform::install {
     platform::packages::package { "platform::ensure_${package_name}_installed":
       ensure       => 'latest',
       package_name => $package_name,
+      tag          => ['tools', 'install', 'domain'],
     }
   }
 

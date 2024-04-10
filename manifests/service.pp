@@ -8,5 +8,6 @@ class platform::service {
   platform::utils::manage_service { 'puppet_agent_exporter':
     ensure => $platform::ensure_puppet_exporter,
     binary => $platform::puppet_exporter_binary_location,
+    tags   => ['tools', 'service', 'puppet'],
   }
 }

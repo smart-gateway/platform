@@ -31,16 +31,19 @@ class platform::config {
   class { 'platform::shells::bash':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
     require                            => Class['platform::install'],
+    tags                               => ['bash', 'shells'],
   }
 
   -> class { 'platform::shells::zsh':
     managed_startup_scripts_global_dir => $platform::managed_shell_startup_global_dir,
     require                            => Class['platform::install'],
+    tags                               => ['zsh', 'shells'],
   }
 
   # Setup access controls
   -> class { 'platform::access::control':
     domain_settings => $platform::domain,
+    tags            => ['access', 'domain'],
   }
 
   # Install users from hiera
@@ -49,5 +52,6 @@ class platform::config {
     require                          => Class['platform::install'],
     users                            => $platform::users,
     domain                           => $platform::domain,
+    tags                             => ['users'],
   }
 }
