@@ -14,11 +14,11 @@ class platform::access::active_directory (
   $computer_name = get($domain_settings, 'computer_name', '')
 
   if $ensure == 'joined' {
+    $domain_name = platform::dn_to_domain($domain_settings['domain_dn'])
+    $domain_name_upper = upcase($domain_name)
+
     # Join system to the domain if not already joined
     if !$facts['joined_to_domain'] {
-      $domain_name = platform::dn_to_domain($domain_settings['domain_dn'])
-      $domain_name_upper = upcase($domain_name)
-
       exec { 'join-domain':
         command => "echo '${mgmt_pass.unwrap}' | realm join ${controller} --user=${mgmt_user.unwrap} --computer-name=${computer_name}",
         unless  => "realm list | grep -q '${domain_name}'",
