@@ -245,7 +245,7 @@ AllowTcpForwarding <%= $allow_tcp_forwarding %>
 <% if $gateway_ports != '' { -%>
 GatewayPorts <%= $gateway_ports %>
 <% } -%>
-X11Forwarding yes
+#X11Forwarding no
 X11Forwarding <%= $x11_forwarding %>
 #X11DisplayOffset 10
 <% if $x11_display_offset != '' { -%>
@@ -259,7 +259,7 @@ X11UseLocalhost <%= $x11_use_localhost %>
 <% if $permit_tty != '' { -%>
 PermitTTY <%= $permit_tty %>
 <% } -%>
-PrintMotd no
+#PrintMotd yes
 PrintMotd <%= $print_motd %>
 #PrintLastLog yes
 <% if $print_last_log != '' { -%>
