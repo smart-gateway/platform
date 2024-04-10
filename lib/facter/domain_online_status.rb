@@ -5,9 +5,9 @@ Facter.add('domain_online_status') do
       'unknown'
     else
       status_output = Facter::Core::Execution.execute("sssctl domain-list #{domain_name} --online", :on_fail => :fail)
-      if status_output.include?('Online')
+      if status_output.include?(': Online')
         'online'
-      elsif status_output.include?('Offline')
+      elsif status_output.include?(': Offline')
         'offline'
       else
         'unknown'
