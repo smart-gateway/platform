@@ -19,69 +19,97 @@ class platform::access::active_directory (
       $domain_name = platform::dn_to_domain($domain_settings['domain_dn'])
       $domain_name_upper = upcase($domain_name)
 
-      Notify { "Joining ${controller} as ${computer_name}": }
       exec { 'join-domain':
         command => "echo '${mgmt_pass.unwrap}' | realm join ${controller} --user=${mgmt_user.unwrap} --computer-name=${computer_name}",
         unless  => "realm list | grep -q '${domain_name}'",
         path    => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
       }
+    }
 
-      file_line { 'AuthorizedKeysCommand':
-        path               => '/etc/ssh/sshd_config',
-        line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
-        match              => '^AuthorizedKeysCommand\s+',
-        append_on_no_match => true,
-        subscribe          => Exec['join-domain'],
-      }
+    file_line { 'AuthorizedKeysCommand':
+      path               => '/etc/ssh/sshd_config',
+      line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
+      match              => '^AuthorizedKeysCommand\s+',
+      append_on_no_match => true,
+    }
 
-      file_line { 'AuthorizedKeysCommandUser':
-        path               => '/etc/ssh/sshd_config',
-        line               => 'AuthorizedKeysCommandUser nobody',
-        match              => '^AuthorizedKeysCommandUser\s+',
-        append_on_no_match => true,
-        subscribe          => Exec['join-domain'],
-      }
+    file_line { 'AuthorizedKeysCommandUser':
+      path               => '/etc/ssh/sshd_config',
+      line               => 'AuthorizedKeysCommandUser nobody',
+      match              => '^AuthorizedKeysCommandUser\s+',
+      append_on_no_match => true,
+    }
 
-      file_line { 'pam_mkhomedir':
-        path               => '/etc/pam.d/common-session',
-        line               => 'session optional    pam_mkhomedir.so skel=/etc/skel umask=077',
-        match              => 'pam_mkhomedir.so',
-        append_on_no_match => true,
-        subscribe          => Exec['join-domain'],
-      }
+    file_line { 'pam_mkhomedir':
+      path               => '/etc/pam.d/common-session',
+      line               => 'session optional    pam_mkhomedir.so skel=/etc/skel umask=077',
+      match              => 'pam_mkhomedir.so',
+      append_on_no_match => true,
+    }
 
-      file { '/etc/sssd/sssd.conf':
-        ensure    => file,
-        content   => epp('platform/domain/etc/sssd/sssd.conf.epp', {
-            'domain_controller' => $controller,
-            'domain_name_lower' => $domain_name,
-            'domain_name_upper' => $domain_name_upper,
-            'computer_name'     => $computer_name,
-        }),
-        owner     => 'root',
-        group     => 'root',
-        mode      => '0600',
-        subscribe => Exec['join-domain'],
-      }
+    file { '/etc/sssd/sssd.conf':
+      ensure  => file,
+      content => epp('platform/domain/etc/sssd/sssd.conf.epp', {
+          'domain_controller' => $controller,
+          'domain_name_lower' => $domain_name,
+          'domain_name_upper' => $domain_name_upper,
+          'computer_name'     => $computer_name,
+      }),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0600',
+    }
 
-      file { '/etc/krb5.conf':
-        ensure  => file,
-        content => epp('platform/domain/etc/krb5.conf.epp', {
-            domain_name_upper => $domain_name_upper,
-        }),
-      }
+    file { '/etc/krb5.conf':
+      ensure  => file,
+      content => epp('platform/domain/etc/krb5.conf.epp', {
+          domain_name_upper => $domain_name_upper,
+      }),
+    }
 
-      service { 'sssd':
-        ensure    => running,
-        enable    => true,
-        subscribe => File['/etc/sssd/sssd.conf'],
-      }
+    service { 'sssd':
+      ensure    => running,
+      enable    => true,
+      subscribe => [
+        File['/etc/sssd/sssd.conf'],
+        File['/etc/krb5.conf'],
+      ],
+    }
 
-      service { 'sshd':
-        ensure    => running,
-        enable    => true,
-        subscribe => File_line['AuthorizedKeysCommand'],
-      }
+    service { 'sshd':
+      ensure    => running,
+      enable    => true,
+      subscribe => File_line['AuthorizedKeysCommand'],
+    }
+
+    # Setup access.conf file
+    $users = $platform::users
+    $users.each | $username, $details | {
+      $type = get($details, 'type', 'local')
+    }
+    $local_users = $users.filter | $username, $details | {
+      $details['type'] == 'local'
+    }.keys
+
+    file { '/etc/security/access.conf':
+      ensure  => file,
+      content => epp('platform/domain/etc/security/access.conf.epp', {
+          'local_users'   => $local_users,
+          'host_group'    => "users-${computer_name}",
+          'project_group' => "users-${platform::project_id}",
+      }),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
+
+    # Ensure that the config file is being used for access
+    -> file_line { 'enable /etc/security/access.conf in /etc/pam.d/common-account':
+      ensure  => present,
+      path    => '/etc/pam.d/common-account',
+      line    => 'account  required       pam_access.so',
+      match   => '^account\s+required\s+pam_access\.so',
+      replace => false,
     }
   } elsif $ensure == 'absent' {
     if $facts['joined_to_domain'] {
@@ -95,35 +123,6 @@ class platform::access::active_directory (
     fail('Unknown ensure value')
   }
 
-  # Setup access.conf file
-  $users = $platform::users
-  $users.each | $username, $details | {
-    $type = get($details, 'type', 'local')
-  }
-  $local_users = $users.filter | $username, $details | {
-    $details['type'] == 'local'
-  }.keys
-
-  file { '/etc/security/access.conf':
-    ensure  => file,
-    content => epp('platform/domain/etc/security/access.conf.epp', {
-        'local_users'   => $local_users,
-        'host_group'    => "users-${computer_name}",
-        'project_group' => "users-${platform::project_id}",
-    }),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-  }
-
-  # Ensure that the config file is being used for access
-  -> file_line { 'enable /etc/security/access.conf in /etc/pam.d/common-account':
-    ensure  => present,
-    path    => '/etc/pam.d/common-account',
-    line    => 'account  required       pam_access.so',
-    match   => '^account\s+required\s+pam_access\.so',
-    replace => false,
-  }
   #%CAPABILITIES%
   # join a domain
   # leave a domain
