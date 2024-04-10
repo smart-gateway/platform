@@ -322,8 +322,8 @@ AcceptEnv <%= $accept_env.join(' ') %>
 # override default of no subsystems
 Subsystem <%= $subsystem.join(' ') %>
 
-<% $ip_qos.each |$qos| { -%>
-IPQoS <%= $qos %>
+<% if !empty($ip_qos){ -%>
+IPQoS <%= $ip_qos.join(' ') %>
 <% } -%>
 
 # Example of overriding settings on a per-user basis

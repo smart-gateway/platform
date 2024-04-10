@@ -62,7 +62,7 @@ class platform::access::ssh (
   Array[String] $accept_env = ['LANG', 'LC_*'],
   Array[String] $subsystem = ['sftp', '/usr/lib/openssh/sftp-server'],
   Array[Hash] $matches = [],
-  Array[String] $ip_qos = ['lowdelay, throughput'],
+  Array[String] $ip_qos = ['lowdelay', 'throughput'],
   String $include_files = '/etc/ssh/sshd_config.d/*.conf'
 ) {
   $file_ensure = $ensure ? {
