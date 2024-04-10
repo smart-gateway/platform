@@ -42,7 +42,7 @@ class platform::install {
   }
 
   # Ensure packages needed for domain are installed
-  $domain_packages = ['sssd-ad', 'sssd-tools', 'realmd', 'adcli', 'libsss-sudo', 'sssd-dbus']
+  $domain_packages = ['sssd-ad', 'sssd-tools', 'realmd', 'adcli', 'libsss-sudo', 'sssd-dbus', 'msktutil']
 
   # Iterate over the array to ensure each package is installed
   $domain_packages.each | String $package_name | {
