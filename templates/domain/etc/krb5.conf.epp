@@ -1,0 +1,12 @@
+<%- |
+  String $domain_name_upper,
+| -%>
+################################################################################################
+# This file is managed by Puppet.
+# DO NOT EDIT. Changes will be overwritten.
+################################################################################################
+[libdefaults]
+    default_realm = <%= $domain_name_upper %>
+    rdns = false
+    ticket_lifetime = 10h
+    renew_lifetime = 7d

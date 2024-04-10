@@ -64,6 +64,13 @@ class platform::access::active_directory (
         subscribe => Exec['join-domain'],
       }
 
+      file { '/etc/krb5.conf':
+        ensure  => file,
+        content => epp('platform/domain/etc/krb5.conf.epp', {
+            domain_name_upper => $domain_name_upper,
+        }),
+      }
+
       service { 'sssd':
         ensure    => running,
         enable    => true,
