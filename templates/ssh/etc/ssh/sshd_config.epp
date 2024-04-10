@@ -1,0 +1,340 @@
+<%- |
+  Integer $port = -1,
+  String $address_family = '',
+  String $listen_address = '',
+  String $listen_address_v6 = '',
+  Array[String] $host_keys = [],
+  String $syslog_facility = '',
+  String $log_level = '',
+  String $login_grace_time = '',
+  String $permit_root_login = '',
+  String $strict_modes = '',
+  String $max_auth_tries = '',
+  String $max_sessions = '',
+  String $pubkey_authentication = '',
+  Array[String] $authorized_keys_file = [],
+  String $authorized_principal_file = '',
+  String $authorized_keys_command = '',
+  String $authorized_keys_command_user = '',
+  String $hostbased_authentication = '',
+  String $ignore_user_known_hosts = '',
+  String $ignore_rhosts = '',
+  String $password_authentication = '',
+  String $permit_empty_passwords = '',
+  String $kbd_interactive_authentication = '',
+  String $kerberos_authentication = '',
+  String $kerberos_or_local_passwd = '',
+  String $kerberos_ticket_cleanup = '',
+  String $kerberos_get_afs_token = '',
+  String $gssapi_authentication = '',
+  String $gssapi_cleanup_credentials = '',
+  String $gssapi_strict_acceptor_check = '',
+  String $gssapi_key_exchange = '',
+  String $use_pam = '',
+  String $allow_agent_forwarding = '',
+  String $allow_tcp_forwarding = '',
+  String $gateway_ports = '',
+  String $x11_forwarding = 'yes',
+  String $x11_display_offset = '',
+  String $x11_use_localhost = '',
+  String $permit_tty = '',
+  String $print_motd = 'no',
+  String $print_last_log = '',
+  String $tcp_keep_alive = '',
+  String $permit_user_environment = '',
+  String $compression = '',
+  String $client_alive_interval = '',
+  String $client_alive_count_max = '',
+  String $use_dns = '',
+  String $pid_file = '',
+  String $max_startups = '',
+  String $permit_tunnel = '',
+  String $chroot_directory = '',
+  String $version_addendum = '',
+  String $banner = '',
+  Array[String] $accept_env = ['LANG', 'LC_*'],
+  Array[String] $subsystem = ['sftp', '/usr/lib/openssh/sftp-server'],
+  Array[Hash] $matches = [],
+  Array[String] $ip_qos = ['lowdelay', 'throughput'],
+  String $include_files = '/etc/ssh/sshd_config.d/*.conf'
+| -%>
+################################################################################################
+# This file is managed by Puppet.
+# DO NOT EDIT. Changes will be overwritten.
+################################################################################################
+# This is the sshd server system-wide configuration file. See
+# sshd_config(5) for more information.
+#
+# This sshd was compiled with PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+#
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented. Uncommented options override the
+# default value.
+
+Include <%= $include_files %>
+
+#Port 22
+<% if $port != -1 { -%>
+Port <%= $port %>
+<% } -%>
+#AddressFamily any
+<% if $address_family != '' { -%>
+AddressFamily <%= $address_family %>
+<% } -%>
+#ListenAddress 0.0.0.0
+<% if $listen_address != '' { -%>
+ListenAddress <%= $listen_address %>
+<% } -%>
+#ListenAddress ::
+<% if $listen_address_v6 != '' { -%>
+ListenAddress <%= $listen_address_v6 %>
+<% } -%>
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
+<% $host_keys.each |$key| { -%>
+HostKey <%= $key %>
+<% } -%>
+# Logging
+#SyslogFacility AUTH
+<% if $syslog_facility != '' { -%>
+SyslogFacility <%= $syslog_facility %>
+<% } -%>
+#LogLevel INFO
+<% if $log_level != '' { -%>
+LogLevel <%= $log_level %>
+<% } -%>
+# Authentication:
+
+#LoginGraceTime 2m
+<% if $login_grace_time != '' { -%>
+LoginGraceTime <%= $login_grace_time %>
+<% } -%>
+#PermitRootLogin prohibit-password
+<% if $permit_root_login != '' { -%>
+PermitRootLogin <%= $permit_root_login %>
+<% } -%>
+#StrictModes yes
+<% if $strict_modes != '' { -%>
+StrictModes <%= $strict_modes %>
+<% } -%>
+#MaxAuthTries 6
+<% if $max_auth_tries != '' { -%>
+MaxAuthTries <%= $max_auth_tries %>
+<% } -%>
+#MaxSessions 10
+<% if $max_sessions != '' { -%>
+MaxSessions <%= $max_sessions %>
+<% } -%>
+
+#PubkeyAuthentication yes
+<% if $pubkey_authentication != '' { -%>
+PubkeyAuthentication <%= $pubkey_authentication %>
+<% } -%>
+
+# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+#AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys2
+<% if !empty($authorized_keys_file){ -%>
+AuthorizedKeysFile <%= $authorized_keys_file.join(' ') %>
+<% } -%>
+
+#AuthorizedPrincipalsFile none
+<% if $authorized_principal_file != '' { -%>
+AuthorizedPrincipalsFile <%= $authorized_principal_file %>
+<% } -%>
+
+#AuthorizedKeysCommand none
+<% if $authorized_keys_command != '' { -%>
+AuthorizedKeysCommand <%= $authorized_keys_command %>
+<% } -%>
+#AuthorizedKeysCommandUser nobody
+<% if $authorized_keys_command_user != '' { -%>
+AuthorizedKeysCommandUser <%= $authorized_keys_command_user %>
+<% } -%>
+
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+<% if $hostbased_authentication != '' { -%>
+HostbasedAuthentication <%= $hostbased_authentication %>
+<% } -%>
+#IgnoreUserKnownHosts no
+<% if $ignore_user_known_hosts != '' { -%>
+IgnoreUserKnownHosts <%= $ignore_user_known_hosts %>
+<% } -%>
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+<% if $ignore_rhosts != '' { -%>
+IgnoreRhosts <%= $ignore_rhosts %>
+<% } -%>
+
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+<% if $password_authentication != '' { -%>
+PasswordAuthentication <%= $password_authentication %>
+<% } -%>
+#PermitEmptyPasswords no
+<% if $permit_empty_passwords != '' { -%>
+PermitEmptyPasswords <%= $permit_empty_passwords %>
+<% } -%>
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+KbdInteractiveAuthentication no
+<% if $kbd_interactive_authentication != '' { -%>
+KbdInteractiveAuthentication <%= $kbd_interactive_authentication %>
+<% } -%>
+
+# Kerberos options
+#KerberosAuthentication no
+<% if $kerberos_authentication != '' { -%>
+KerberosAuthentication <%= $kerberos_authentication %>
+<% } -%>
+#KerberosOrLocalPasswd yes
+<% if $kerberos_or_local_passwd != '' { -%>
+KerberosOrLocalPasswd <%= $kerberos_or_local_passwd %>
+<% } -%>
+#KerberosTicketCleanup yes
+<% if $kerberos_ticket_cleanup != '' { -%>
+KerberosTicketCleanup <%= $kerberos_ticket_cleanup %>
+<% } -%>
+#KerberosGetAFSToken no
+<% if $kerberos_get_afs_token != '' { -%>
+KerberosGetAFSToken <%= $kerberos_get_afs_token %>
+<% } -%>
+
+# GSSAPI options
+#GSSAPIAuthentication no
+<% if $gssapi_authentication != '' { -%>
+GSSAPIAuthentication <%= $gssapi_authentication %>
+<% } -%>
+#GSSAPICleanupCredentials yes
+<% if $gssapi_cleanup_credentials != '' { -%>
+GSSAPICleanupCredentials <%= $gssapi_cleanup_credentials %>
+<% } -%>
+#GSSAPIStrictAcceptorCheck yes
+<% if $gssapi_strict_acceptor_check != '' { -%>
+GSSAPIStrictAcceptorCheck <%= $gssapi_strict_acceptor_check %>
+<% } -%>
+#GSSAPIKeyExchange no
+<% if $gssapi_key_exchange != '' { -%>
+GSSAPIKeyExchange <%= $gssapi_key_exchange %>
+<% } -%>
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the KbdInteractiveAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via KbdInteractiveAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and KbdInteractiveAuthentication to 'no'.
+UsePAM <%= $use_pam %>
+
+#AllowAgentForwarding yes
+<% if $allow_agent_forwarding != '' { -%>
+AllowAgentForwarding <%= $allow_agent_forwarding %>
+<% } -%>
+#AllowTcpForwarding yes
+<% if $allow_tcp_forwarding != '' { -%>
+AllowTcpForwarding <%= $allow_tcp_forwarding %>
+<% } -%>
+#GatewayPorts no
+<% if $gateway_ports != '' { -%>
+GatewayPorts <%= $gateway_ports %>
+<% } -%>
+X11Forwarding yes
+X11Forwarding <%= $x11_forwarding %>
+#X11DisplayOffset 10
+<% if $x11_display_offset != '' { -%>
+X11DisplayOffset <%= $x11_display_offset %>
+<% } -%>
+#X11UseLocalhost yes
+<% if $x11_use_localhost != '' { -%>
+X11UseLocalhost <%= $x11_use_localhost %>
+<% } -%>
+#PermitTTY yes
+<% if $permit_tty != '' { -%>
+PermitTTY <%= $permit_tty %>
+<% } -%>
+PrintMotd no
+PrintMotd <%= $print_motd %>
+#PrintLastLog yes
+<% if $print_last_log != '' { -%>
+PrintLastLog <%= $print_last_log %>
+<% } -%>
+#TCPKeepAlive yes
+<% if $tcp_keep_alive != '' { -%>
+TCPKeepAlive <%= $tcp_keep_alive %>
+<% } -%>
+#PermitUserEnvironment no
+<% if $permit_user_environment != '' { -%>
+PermitUserEnvironment <%= $permit_user_environment %>
+<% } -%>
+#Compression delayed
+<% if $compression != '' { -%>
+Compression <%= $compression %>
+<% } -%>
+#ClientAliveInterval 0
+<% if $client_alive_interval != '' { -%>
+ClientAliveInterval <%= $client_alive_interval %>
+<% } -%>
+#ClientAliveCountMax 3
+<% if $client_alive_count_max != '' { -%>
+ClientAliveCountMax <%= $client_alive_count_max %>
+<% } -%>
+#UseDNS no
+<% if $use_dns != '' { -%>
+UseDNS <%= $use_dns %>
+<% } -%>
+#PidFile /run/sshd.pid
+<% if $pid_file != '' { -%>
+PidFile <%= $pid_file %>
+<% } -%>
+#MaxStartups 10:30:100
+<% if $max_startups != '' { -%>
+MaxStartups <%= $max_startups %>
+<% } -%>
+#PermitTunnel no
+<% if $permit_tunnel != '' { -%>
+PermitTunnel <%= $permit_tunnel %>
+<% } -%>
+#ChrootDirectory none
+<% if $chroot_directory != '' { -%>
+ChrootDirectory <%= $chroot_directory %>
+<% } -%>
+#VersionAddendum none
+<% if $version_addendum != '' { -%>
+VersionAddendum <%= $version_addendum %>
+<% } -%>
+
+# no default banner path
+#Banner none
+<% if $banner != '' { -%>
+Banner <%= $banner %>
+<% } -%>
+
+# Allow client to pass locale environment variables
+AcceptEnv <%= $accept_env.join(' ') %>
+
+# override default of no subsystems
+Subsystem <%= $subsystem.join(' ') %>
+
+<% $ip_qos.each |$qos| { -%>
+IPQoS <%= $qos %>
+<% } -%>
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#   X11Forwarding no
+#   AllowTcpForwarding no
+#   PermitTTY no
+#   ForceCommand cvs server
+<% $matches.each |$match| { -%>
+Match <%= $match['condition'] %>
+    <% $match['settings'].each |$key, $value| { -%>
+    <%= $key %> <%= $value %>
+    <% } -%>
+<% } -%>

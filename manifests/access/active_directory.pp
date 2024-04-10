@@ -26,19 +26,24 @@ class platform::access::active_directory (
       }
     }
 
-    file_line { 'AuthorizedKeysCommand':
-      path               => '/etc/ssh/sshd_config',
-      line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
-      match              => '^AuthorizedKeysCommand\s+',
-      append_on_no_match => true,
+    class { 'platform::access:ssh':
+      ensure                       => 'present',
+      authorized_keys_command      => '/usr/bin/sss_ssh_authorizedkeys',
+      authorized_keys_command_user => 'nobody',
     }
-
-    file_line { 'AuthorizedKeysCommandUser':
-      path               => '/etc/ssh/sshd_config',
-      line               => 'AuthorizedKeysCommandUser nobody',
-      match              => '^AuthorizedKeysCommandUser\s+',
-      append_on_no_match => true,
-    }
+    # file_line { 'AuthorizedKeysCommand':
+    #   path               => '/etc/ssh/sshd_config',
+    #   line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
+    #   match              => '^AuthorizedKeysCommand\s+',
+    #   append_on_no_match => true,
+    # }
+    #
+    # file_line { 'AuthorizedKeysCommandUser':
+    #   path               => '/etc/ssh/sshd_config',
+    #   line               => 'AuthorizedKeysCommandUser nobody',
+    #   match              => '^AuthorizedKeysCommandUser\s+',
+    #   append_on_no_match => true,
+    # }
 
     file_line { 'pam_mkhomedir':
       path               => '/etc/pam.d/common-session',
@@ -76,11 +81,11 @@ class platform::access::active_directory (
       ],
     }
 
-    service { 'sshd':
-      ensure    => running,
-      enable    => true,
-      subscribe => File_line['AuthorizedKeysCommand'],
-    }
+    # service { 'sshd':
+    #   ensure    => running,
+    #   enable    => true,
+    #   subscribe => File_line['AuthorizedKeysCommand'],
+    # }
 
     # Setup access.conf file
     $users = $platform::users
