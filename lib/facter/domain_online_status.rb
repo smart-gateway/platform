@@ -1,4 +1,5 @@
 Facter.add('domain_online_status') do
+  confine :kernel => 'linux'
   setcode do
     domain_name = Facter::Core::Execution.execute('sssctl domain-list', :on_fail => :fail).strip
     if domain_name.empty?
