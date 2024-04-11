@@ -57,6 +57,11 @@ class platform::domain::control (
         default => $details['keys']
       }
 
+      $import_keys = $details['import-keys'] ? {
+        undef   => [],
+        default => $details['import-keys']
+      }
+
       if $type == 'domain' {
         $user_pass = Sensitive(platform::decrypt_password($private_key_b64, $details['password']))
         dsc_aduser { "ensure ${username} is created in domain":
@@ -82,6 +87,19 @@ class platform::domain::control (
           platform::domain::ssh_key { "install key ${key} for user ${username}":
             user => $username,
             key  => "${key_details['key_type']} ${key_details['key_value']}",
+          }
+        }
+
+        # Add any github accounts
+        $import_keys.each | $account | {
+          $parts = split($account, ':')
+
+          if downcase($parts[0]) == 'gh' {
+            $account_name = $parts[1]
+            platform::domain::github_keys { "install keys from ${account_name} to ${username}":
+              user            => $username,
+              github_username => $account_name,
+            }
           }
         }
       }
