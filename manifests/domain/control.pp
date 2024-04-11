@@ -28,6 +28,13 @@ class platform::domain::control (
       content => epp('platform/domain/programdata/puppetlabs/Import-GitHubSSHKeysToUser.ps1.epp'),
     }
 
+    # Schedule to restrict running the github imports too much
+    schedule { 'every_6_hours':
+      period => 'daily',
+      repeat => 4, # 24 hours / 6 = 4 times a day
+      range  => '00:00 - 23:59', # Whole day
+    }
+
     # Ensure the OUs for the users and groups is created
     $ous = {
       'users' => $users_ou,

@@ -9,12 +9,6 @@ define platform::domain::github_keys (
   String[1] $github_username,
 ) {
 
-  schedule { 'every_6_hours':
-    period => 'daily',
-    repeat => 4, # 24 hours / 6 = 4 times a day
-    range  => '00:00 - 23:59', # Whole day
-  }
-
   # This defined type uses a PowerShell script stored at a specific location
   # Ensure the PowerShell script is accessible on the system where this defined type is applied
   exec { "import GitHub SSH keys from ${github_username} to user ${user}":
