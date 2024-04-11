@@ -75,3 +75,5 @@ if ($publicKeys.Count -gt 0) {
 } else {
     Write-Host "No SSH keys found for GitHub user $GitHubUsername."
 }
+
+Exit $LASTEXITCODE
