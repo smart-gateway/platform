@@ -52,6 +52,11 @@ class platform::domain::control (
         default  => 'other'
       }
 
+      $keys = $details['keys'] ? {
+        undef   => {},
+        default => $details['keys']
+      }
+
       if $type == 'domain' {
         $user_pass = Sensitive(platform::decrypt_password($private_key_b64, $details['password']))
         dsc_aduser { "ensure ${username} is created in domain":
@@ -70,6 +75,14 @@ class platform::domain::control (
             user     => $username,
             password => $user_pass,
           },
+        }
+
+        # Add any ssh keys
+        $keys.each | $key, $key_details | {
+          platform::domain::ssh_key { "install key ${key} for user ${username}":
+            user => $username,
+            key  => "${key_details['key_type']} ${key_details['key_value']}",
+          }
         }
       }
     }
