@@ -1,0 +1,77 @@
+<#
+    .SYNOPSIS
+        Import-GitHubSSHKeysToUser.ps1 - Retrieve SSH public keys from a GitHub user and add them to the specified Active Directory user.
+
+    .DESCRIPTION
+        This script retrieves SSH public keys from a GitHub user and adds them to the 'sshPublicKey' attribute of the specified Active Directory user.
+
+    .PARAMETER User
+        The Active Directory username to whom the SSH public keys will be added.
+
+    .PARAMETER GitHubUsername
+        The GitHub username from which the SSH public keys will be fetched.
+
+    .EXAMPLE
+        .\Import-GitHubSSHKeysToUser.ps1 -User jdoe -GitHubUsername johndoe
+
+    .NOTES
+        FileName:        Import-GitHubSSHKeysToUser.ps1
+        Author:          Benjamin Grewell
+        Email:           benjamin.grewell@intel.com
+        Last Updated:    19-Apr-2023
+        License:         GPL (GNU General Public License)
+	History:
+		27-Mar-2023: Initial Version
+		19-Apr-2023: Made idempotent so it can be ran multiple times on a user to pickup recent changes
+    .LINK
+        https://www.gnu.org/licenses/gpl-3.0.en.html
+#>
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$User,
+
+    [Parameter(Mandatory = $true)]
+    [string]$GitHubUsername
+)
+
+# Import active directory module for running AD cmdlets
+Import-Module ActiveDirectory
+
+# Function to get the public keys from a GitHub user
+function Get-GitHubPublicKeys {
+    param(
+        [string]$GitHubUsername
+    )
+    $GitHubApiUrl = "https://api.github.com/users/$GitHubUsername/keys"
+    $response = Invoke-WebRequest -Uri $GitHubApiUrl -UseBasicParsing
+
+    if ($response.StatusCode -eq 200) {
+        $keys = ($response.Content | ConvertFrom-Json) | Select-Object -ExpandProperty key
+        return $keys
+    } else {
+        Write-Warning "Failed to fetch public keys for GitHub user $GitHubUsername"
+        return @()
+    }
+}
+
+# Retrieve the public keys from the user's GitHub account
+$publicKeys = Get-GitHubPublicKeys -GitHubUsername $GitHubUsername
+
+# Check and add public keys to the 'sshPublicKey' attribute if not already present
+if ($publicKeys.Count -gt 0) {
+    $currentUser = Get-ADUser -Identity $User -Properties sshPublicKey
+    foreach ($key in $publicKeys) {
+        if (-not ($currentUser.sshPublicKey -contains $key)) {
+            try {
+                Set-ADUser -Identity $User -Add @{sshPublicKey=@($key.ToString())}
+                Write-Host "Added SSH key for user $User : $key"
+            } catch {
+                Write-Warning "Failed to add key for user $User : $_"
+            }
+        } else {
+            Write-Host "SSH key already exists for user $User : $key"
+        }
+    }
+} else {
+    Write-Host "No SSH keys found for GitHub user $GitHubUsername."
+}
