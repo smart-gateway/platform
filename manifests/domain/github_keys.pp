@@ -11,7 +11,7 @@ define platform::domain::github_keys (
   # This defined type uses a PowerShell script stored at a specific location
   # Ensure the PowerShell script is accessible on the system where this defined type is applied
   exec { "import GitHub SSH keys from ${github_username} to user ${user}":
-    command   => "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\\ProgramData\\PuppetLabs\\Import-GitHubSSHKeysToUser.ps1' -User '${user}' -GitHubUsername '${github_username}'",
+    command   => "powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\\ProgramData\\PuppetLab\\Import-GitHubSSHKeysToUser.ps1' -User '${user}' -GitHubUsername '${github_username}'",
     path      => ['C:\Windows\System32', 'C:\Windows', 'C:\Windows\System32\WindowsPowerShell\v1.0'],
     logoutput => true,
   }
