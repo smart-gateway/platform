@@ -22,6 +22,12 @@ class platform::domain::control (
     #   data => '1',
     # }
 
+    # Ensure the script needed for importing GitHub users is present
+    file { 'C:\\ProgramData\\PuppetLabs\\Import-GitHubSSHKeysToUser.ps1':
+      ensure  => file,
+      content => epp('platform/domain/programdata/puppetlabs/Import-GitHubSSHKeysToUser.ps1.epp'),
+    }
+
     # Ensure the OUs for the users and groups is created
     $ous = {
       'users' => $users_ou,

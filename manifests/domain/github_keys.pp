@@ -8,11 +8,6 @@ define platform::domain::github_keys (
   String[1] $user,
   String[1] $github_username,
 ) {
-  file { "ensure script exists for ${user} before adding ${github_username}":
-    ensure  => file,
-    path    => 'C:\\ProgramData\\PuppetLabs\\Import-GitHubSSHKeysToUser.ps1',
-    content => epp('platform/domain/programdata/puppetlabs/Import-GitHubSSHKeysToUser.ps1.epp'),
-  }
 
   schedule { 'every_6_hours':
     period => 'daily',
