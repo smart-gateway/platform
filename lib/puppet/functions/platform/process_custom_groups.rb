@@ -8,14 +8,18 @@ Puppet::Functions.create_function(:'platform::process_custom_groups') do
     result = {}
 
     custom_entries.each do |entry|
-      system_value = entry['system'] # Keeping the case as in the original
+      system_value = entry['system']  # Keeping the case as in the original
 
       admins_key = "Admins-#{system_value}"
       users_key = "Users-#{system_value}"
 
-      # Adding to the result hash
-      result[admins_key] = entry['admins']
-      result[users_key] = entry['users']
+      # Sort the members arrays before adding them to the result hash
+      sorted_admins = entry['admins'].sort
+      sorted_users = entry['users'].sort
+
+      # Adding sorted lists to the result hash
+      result[admins_key] = sorted_admins
+      result[users_key] = sorted_users
     end
 
     result
