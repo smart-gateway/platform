@@ -34,13 +34,11 @@ class platform::utils::timezone (
       }
     }
     'windows': {
-      Notify { 'Setting Timezone for Windows': }
       # Use the mapping if available, otherwise default to the provided timezone
       $windows_timezone = $windows_timezone_map[$timezone] ? {
         undef   => $timezone,
         default => $windows_timezone_map[$timezone],
       }
-      Notify { "Windows Timezones set to ${windows_timezone}": }
 
       if !member($windows_timezone, $facts['timezone']) {
         Notify { "Setting Windows Timezone to ${windows_timezone[0]}": }
