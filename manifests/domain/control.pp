@@ -125,7 +125,7 @@ class platform::domain::control (
 
       $standard_groups = {
         "Admins-${project_id}" => $project_details['access']['admins'],
-        "Users-${project_id}" => $project_details['access']['users'] + ["CN=Admins-${project_id}"],
+        "Users-${project_id}" => $project_details['access']['users'] + ["Admins-${project_id}"],
       }
 
       $has_custom_groups = $project_details['access'] and $project_details['access']['custom']
