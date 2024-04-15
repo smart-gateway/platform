@@ -43,8 +43,9 @@ function Get-GitHubPublicKeys {
         [string]$GitHubUsername
     )
     $GitHubApiUrl = "https://api.github.com/users/$GitHubUsername/keys"
-    Write-Host "Attempting to get keys for user: $GitHubUsername"
+    Write-Host "Retrieving keys from URL: $GitHubApiUrl"
     $response = Invoke-WebRequest -Uri $GitHubApiUrl -UseBasicParsing
+
 
     if ($response.StatusCode -eq 200) {
         $keys = ($response.Content | ConvertFrom-Json) | Select-Object -ExpandProperty key
