@@ -58,6 +58,7 @@ class platform::domain::control (
 
     # Handle creation of all users that are of type=domain
     $users_path = "${users_ou},${domain_dn}"
+    $groups_path = "${groups_ou},${domain_dn}"
     $domain = platform::dn_to_domain($domain_dn)
     $users.each | $username, $details | {
       $type = $details['type'] ? {
@@ -124,17 +125,16 @@ class platform::domain::control (
 
       $standard_groups = {
         "Admins-${project_id}" => $project_details['access']['admins'],
-        "Users-${project_id}" => $project_details['access']['users'] + ["Admins-${project_id}"],
+        "Users-${project_id}" => $project_details['access']['users'] + ["CN=Admins-${project_id},${groups_path}"],
       }
 
       $has_custom_groups = $project_details['access'] and $project_details['access']['custom']
       $custom_groups = $has_custom_groups ? {
-        true  => platform::process_custom_groups($project_details['access']['custom']),
+        true  => platform::process_custom_groups($project_details['access']['custom'], $users_path, $groups_path),
         false => {},
       }
 
       $groups_to_create = merge($standard_groups, $custom_groups)
-      $groups_path = "${groups_ou},${domain_dn}"
 
       $groups_to_create.each | $group_name, $group_members | {
         # Create the active directory group
