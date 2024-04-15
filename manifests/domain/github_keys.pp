@@ -14,5 +14,6 @@ define platform::domain::github_keys (
     command   => "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\\ProgramData\\PuppetLabs\\Import-GitHubSSHKeysToUser.ps1 -User ${user} -GitHubUsername ${github_username}",
     path      => ['C:\Windows\System32', 'C:\Windows', 'C:\Windows\System32\WindowsPowerShell\v1.0'],
     logoutput => true,
+    schedule  => 'every_6_hours',
   }
 }
