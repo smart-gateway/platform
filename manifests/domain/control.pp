@@ -125,7 +125,7 @@ class platform::domain::control (
 
       $standard_groups = {
         "Admins-${project_id}" => $project_details['access']['admins'],
-        "Users-${project_id}" => $project_details['access']['users'] + ["CN=Admins-${project_id},${groups_path}"],
+        "Users-${project_id}" => $project_details['access']['users'] + ["Admins-${project_id}"],
       }
 
       $has_custom_groups = $project_details['access'] and $project_details['access']['custom']
@@ -139,13 +139,12 @@ class platform::domain::control (
       $groups_to_create.each | $group_name, $group_members | {
         # Create the active directory group
         dsc_adgroup { "ensure ${project_name} group ${group_name} exists":
-          dsc_ensure              => 'present',
-          dsc_groupname           => $group_name,
-          dsc_groupscope          => 'global',
-          dsc_category            => 'security',
-          dsc_path                => $groups_path,
-          dsc_memberstoinclude    => $group_members,
-          dsc_membershipattribute => 'DistinguishedName',
+          dsc_ensure           => 'present',
+          dsc_groupname        => $group_name,
+          dsc_groupscope       => 'global',
+          dsc_category         => 'security',
+          dsc_path             => $groups_path,
+          dsc_memberstoinclude => $group_members,
         }
       }
 
