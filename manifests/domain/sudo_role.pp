@@ -19,13 +19,13 @@ define platform::domain::sudo_role (
     exec { "create-${role_name}":
       command   => "New-ADObject -Name '${role_name}' -Path '${path}' -Type sudoRole -OtherAttributes @{sudoCommand='${sudo_command}'; sudoHost='${sudo_host}'; sudoUser='${sudo_user}'}",
       provider  => powershell,
-      logoutput => true,
+      logoutput => false,
     }
   } elsif $ensure == 'absent' and ($role_name in $existing_sudo_roles) {
     exec { "remove-${role_name}":
       command   => "Remove-ADObject -Identity '${role_name}' -Confirm:\$false",
       provider  => powershell,
-      logoutput => true,
+      logoutput => false,
     }
   }
 }

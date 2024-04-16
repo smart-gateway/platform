@@ -12,6 +12,6 @@ define platform::domain::ssh_key (
     command   => "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"Import-Module ActiveDirectory; If (-not (Get-ADUser -Filter { SamAccountName -eq '${user}' } -Properties sshPublicKey).sshPublicKey -contains '${key}') { Set-ADUser -Identity '${user}' -Add @{sshPublicKey=@('${key}')} }\"",
     path      => ['C:\Windows\System32', 'C:\Windows', 'C:\Windows\System32\WindowsPowerShell\v1.0'],
     unless    => "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"If ((Get-ADUser -Filter { SamAccountName -eq '${user}' } -Properties sshPublicKey).sshPublicKey -contains '${key}') { exit 0 } else { exit 1 }\"",
-    logoutput => true,
+    logoutput => false,
   }
 }
