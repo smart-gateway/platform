@@ -130,7 +130,7 @@ class platform::domain::control (
 
       $has_custom_groups = $project_details['access'] and $project_details['access']['custom']
       $custom_groups = $has_custom_groups ? {
-        true  => platform::process_custom_groups($project_details['access']['custom'], $users_path, $groups_path),
+        true  => platform::process_custom_groups($project_details['access']['custom']),
         false => {},
       }
 
