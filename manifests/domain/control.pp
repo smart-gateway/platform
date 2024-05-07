@@ -81,7 +81,12 @@ class platform::domain::control (
         default => $details['enabled']
       }
 
-      if $type == 'domain' {
+      $domain_users = $facts['domain_users'] ? {
+        undef   => [],
+        default => $facts['domain_users']
+      }
+
+      if $type == 'domain' and !($username in $domain_users) {
         $user_pass = Sensitive(platform::decrypt_password($private_key_b64, $details['password']))
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure            => $details['ensure'],
