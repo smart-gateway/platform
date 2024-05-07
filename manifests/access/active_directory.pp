@@ -6,6 +6,7 @@
 #   include platform::access::active_directory
 class platform::access::active_directory (
   Hash $domain_settings,
+  String $allow_password_over_ssh,
 ) {
   $ensure = get($domain_settings, 'ensure', undef)
   $controller = get($domain_settings, 'controller', '')
@@ -30,7 +31,7 @@ class platform::access::active_directory (
       ensure                       => 'present',
       authorized_keys_command      => '/usr/bin/sss_ssh_authorizedkeys',
       authorized_keys_command_user => 'nobody',
-      password_authentication      => 'yes',
+      password_authentication      => $allow_password_over_ssh,
     }
 
     file_line { 'pam_mkhomedir':
@@ -68,12 +69,6 @@ class platform::access::active_directory (
         File['/etc/krb5.conf'],
       ],
     }
-
-    # service { 'sshd':
-    #   ensure    => running,
-    #   enable    => true,
-    #   subscribe => File_line['AuthorizedKeysCommand'],
-    # }
 
     # Setup access.conf file
     $users = $platform::users

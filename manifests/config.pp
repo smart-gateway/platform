@@ -42,8 +42,9 @@ class platform::config {
 
   # Setup access controls
   -> class { 'platform::access::control':
-    domain_settings => $platform::domain,
-    tag             => ['access', 'domain'],
+    domain_settings         => $platform::domain,
+    allow_password_over_ssh => $platform::allow_password_over_ssh,
+    tag                     => ['access', 'domain'],
   }
 
   # Install users from hiera

@@ -15,6 +15,7 @@ class platform (
   String $managed_shell_startup_global_dir = '/etc/%src.managed.d', # these strings have a format string in them so different shells can use them
   String $managed_shell_startup_user_dir = '.%src.managed.d', # these strings have a format string in them so different shells can use them
   Boolean $manage_timezone = true,
+  String $allow_password_over_ssh = 'no',
   String $timezone = 'America/Los_Angeles',
   Hash $users = {},
   Hash $domain = {},
