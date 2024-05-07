@@ -22,20 +22,6 @@ define platform::utils::mark_applied (
     default   => 'root'
   }
 
-  file { '/tmp/puppet-agent':
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-
-  file { '/tmp/puppet-agent/applied':
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-
   file { $filename:
     ensure  => file,
     mode    => '0444',
