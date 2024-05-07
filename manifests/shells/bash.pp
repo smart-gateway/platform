@@ -6,7 +6,7 @@
 #   include platform::shells::bash
 class platform::shells::bash (
   String $managed_startup_scripts_global_dir,
-  String $system_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin',
+  String $system_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/puppetlabs/puppet/bin',
   Boolean $manage_startup_scripts = true,
 ) {
   if $manage_startup_scripts {
