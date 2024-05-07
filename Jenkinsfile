@@ -7,6 +7,7 @@ def REPOS = [
     'lab02',
     'lab03',
     'echo',
+    'oran',
 ]
 pipeline {
     agent {
