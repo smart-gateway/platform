@@ -76,10 +76,16 @@ class platform::domain::control (
         default => $details['import-keys']
       }
 
+      $enabled = $details['enabled'] ? {
+        undef   => true,
+        default => $details['enabled']
+      }
+
       if $type == 'domain' {
         $user_pass = Sensitive(platform::decrypt_password($private_key_b64, $details['password']))
         dsc_aduser { "ensure ${username} is created in domain":
           dsc_ensure            => $details['ensure'],
+          dsc_enabled           => $enabled,
           dsc_username          => $username,
           dsc_userprincipalname => "${username}@${domain}",
           dsc_domainname        => $domain,
