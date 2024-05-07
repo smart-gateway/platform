@@ -32,19 +32,6 @@ class platform::access::active_directory (
       authorized_keys_command_user => 'nobody',
       password_authentication      => 'yes',
     }
-    # file_line { 'AuthorizedKeysCommand':
-    #   path               => '/etc/ssh/sshd_config',
-    #   line               => 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys',
-    #   match              => '^AuthorizedKeysCommand\s+',
-    #   append_on_no_match => true,
-    # }
-    #
-    # file_line { 'AuthorizedKeysCommandUser':
-    #   path               => '/etc/ssh/sshd_config',
-    #   line               => 'AuthorizedKeysCommandUser nobody',
-    #   match              => '^AuthorizedKeysCommandUser\s+',
-    #   append_on_no_match => true,
-    # }
 
     file_line { 'pam_mkhomedir':
       path               => '/etc/pam.d/common-session',
