@@ -54,4 +54,8 @@ class platform::config {
     domain                           => $platform::domain,
     tag                              => ['users'],
   }
+
+  # Run cleanup class
+  class { 'platform::utils::cleanup':
+  }
 }
