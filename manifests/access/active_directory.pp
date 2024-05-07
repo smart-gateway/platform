@@ -30,6 +30,7 @@ class platform::access::active_directory (
       ensure                       => 'present',
       authorized_keys_command      => '/usr/bin/sss_ssh_authorizedkeys',
       authorized_keys_command_user => 'nobody',
+      password_authentication      => 'yes',
     }
     # file_line { 'AuthorizedKeysCommand':
     #   path               => '/etc/ssh/sshd_config',
