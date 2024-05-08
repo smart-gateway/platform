@@ -23,6 +23,7 @@ define platform::user::domain (
   # Ensure users bash customizations are executed
   platform::shells::bash_user { "bash_user_${username}":
     username                         => $username,
+    user_type                        => 'domain',
     home_dir                         => $home_dir,
     managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
     shell_options                    => $bash_options,
@@ -31,6 +32,7 @@ define platform::user::domain (
   # Ensure users zsh customizations are executed
   platform::shells::zsh_user { "zsh_user_${username}":
     username                         => $username,
+    user_type                        => 'domain',
     home_dir                         => $home_dir,
     managed_startup_scripts_user_dir => $managed_startup_scripts_user_dir,
     shell_options                    => $zsh_options,

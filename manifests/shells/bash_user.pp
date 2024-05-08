@@ -6,6 +6,7 @@
 #   platform::shells::bash { 'namevar': }
 define platform::shells::bash_user (
   String $username,
+  String $user_type,
   String $home_dir,
   String $managed_startup_scripts_user_dir,
   Boolean $manage_startup_scripts = true,
@@ -27,6 +28,19 @@ define platform::shells::bash_user (
     file { "${home_dir}/.profile":
       ensure  => file,
       content => epp('platform/shells/bash/user/.profile.epp'),
+    }
+
+    # Ensure their .bashrc file exist
+    $owner = $user_type ? {
+      'local' => $username,
+      'domain' => 'domain users',
+    }
+    file { "${home_dir}/.bashrc":
+      ensure  => file,
+      content => epp('platform/shells/bash/user/.bashrc.epp'),
+      replace => false,
+      owner   => $username,
+      group   => $owner,
     }
 
     # Add line to their .bashrc
