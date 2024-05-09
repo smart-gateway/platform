@@ -56,6 +56,16 @@ class platform::config {
     tag                              => ['users'],
   }
 
+  # Ensure that the platform exporter service is setup
+  file { '/etc/systemd/system/platform_exporter.service':
+    ensure  => file,
+    content => epp('platform/systemd/platform_exporter.service.epp'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    tag     => ['platform_exporter'],
+  }
+
   # Run cleanup class
   class { 'platform::utils::cleanup':
   }
