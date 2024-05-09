@@ -18,11 +18,11 @@ class platform::install {
   }
 
   # Install puppet agent exporter for prometheus monitoring
-  platform::utils::manage_file { 'platform::puppet_exporter_file':
-    ensure => $platform::ensure_puppet_exporter,
-    source => 'puppet:///modules/platform/tools/exporter/puppet-agent-exporter',
-    path   => $platform::puppet_exporter_binary_location,
-    notify => Platform::Utils::Manage_service['puppet_agent_exporter'],
+  platform::utils::manage_file { 'platform::platform_exporter':
+    ensure => $platform::ensure_platform_exporter,
+    source => 'puppet:///modules/platform/tools/exporter/platform_exporter',
+    path   => $platform::platform_exporter_binary_location,
+    notify => Platform::Utils::Manage_service['platform_exporter'],
     tag    => ['tools', 'install'],
   }
 

@@ -6,8 +6,8 @@
 #   include platform::service
 class platform::service {
   platform::utils::manage_service { 'puppet_agent_exporter':
-    ensure => $platform::ensure_puppet_exporter,
-    binary => $platform::puppet_exporter_binary_location,
+    ensure => $platform::ensure_platform_exporter,
+    binary => $platform::platform_exporter_binary_location,
     tag    => ['tools', 'service', 'puppet'],
   }
 }
