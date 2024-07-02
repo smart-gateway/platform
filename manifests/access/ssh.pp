@@ -13,7 +13,7 @@ class platform::access::ssh (
   Array[String] $host_keys = [],
   String $syslog_facility = '',
   String $log_level = '',
-  String $login_grace_time = '',
+  String $login_grace_time = '0',
   String $permit_root_login = '',
   String $strict_modes = '',
   String $max_auth_tries = '',
