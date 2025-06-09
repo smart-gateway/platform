@@ -132,10 +132,10 @@ class platform::access::ssh (
         ip_qos                         => $ip_qos,
         include_files                  => $include_files,
     }),
-    notify  => Service['sshd'],
+    notify  => Service['ssh'],
   }
 
-  service { 'sshd':
+  service { 'ssh':
     ensure    => running,
     enable    => true,
     subscribe => File['/etc/ssh/sshd_config'],
